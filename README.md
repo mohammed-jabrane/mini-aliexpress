@@ -16,7 +16,7 @@ A full-stack e-commerce platform inspired by AliExpress, built as a mini project
 | Kafka | 3.4 | Asynchronous messaging / event streaming |
 | Confluent Schema Registry | 7.6 | Schema management for Kafka (Avro/JSON) |
 | Minio (S3) | - | Object storage (product images, assets) |
-| Keycloak | 27 | Identity & access management (OAuth2 / OIDC) |
+| Keycloak | 26 | Identity & access management (OAuth2 / OIDC) |
 | SpringDoc OpenAPI | 2.8 | API documentation (Swagger UI) |
 | Lombok | - | Boilerplate reduction |
 
