@@ -1,0 +1,62 @@
+# ── IDE ───────────────────────────────────────
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+*.sublime-workspace
+
+# ── OS ───────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Backend (Java / Maven) ───────────────────
+backend/target/
+!backend/src/main/**/target/
+!backend/src/test/**/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/build/
+!backend/src/main/**/build/
+!backend/src/test/**/build/
+*.class
+*.jar
+*.war
+*.log
+
+# ── Frontend (Angular / Node) ────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/tmp/
+frontend/out-tsc/
+frontend/.angular/cache
+frontend/coverage/
+npm-debug.log
+yarn-error.log
+
+# ── Terraform ────────────────────────────────
+infra/terraform/**/.terraform/
+infra/terraform/**/*.tfstate
+infra/terraform/**/*.tfstate.backup
+infra/terraform/**/*.tfplan
+*.tfvars.local
+
+# ── Docker ───────────────────────────────────
+*.env.local
+
+# ── Test reports ─────────────────────────────
+tests/performance/jmeter/*.jtl
+tests/performance/jmeter/report/
+tests/performance/gatling/results/
+**/zap-report.html
+
+# ── Security scan reports ────────────────────
+**/dependency-check-report.*
+**/sonar/
+**/pitest-reports/
+
+# ── Secrets (never commit) ───────────────────
+*.pem
+*.key
+credentials.json
+.env
+!infra/docker/local/.env

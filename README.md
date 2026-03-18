@@ -32,6 +32,25 @@ A full-stack e-commerce platform inspired by AliExpress, built as a mini project
 | Mappers | - | DTO-to-Model transformation layer |
 | RxJS | 7.8 | Reactive programming |
 
+### Testing & Quality
+
+| Technology | Version | Purpose |
+|---|---|---|
+| JUnit 5 | - | Backend unit testing |
+| Mockito | - | Mocking framework |
+| Testcontainers | - | Integration tests (PostgreSQL, Kafka, Minio) |
+| Cucumber | 7.21 | BDD functional tests (Gherkin) |
+| Jasmine + Karma | - | Frontend unit testing |
+| Cypress | - | E2E testing |
+| Gatling | 4.12 | Performance / load testing |
+| PITest | 1.17 | Mutation testing |
+| Trivy | - | Container & dependency CVE scanning |
+| OWASP Dependency-Check | 11.1 | SCA (known CVEs in dependencies) |
+| OWASP ZAP | - | DAST (runtime vulnerability scanning) |
+| SonarQube | - | Code quality, security hotspots, coverage |
+| Checkmarx | - | SAST (static code analysis) |
+| Checkov | - | Terraform IaC security scanning |
+
 ### Infrastructure & DevOps
 
 | Technology | Purpose |
@@ -44,6 +63,7 @@ A full-stack e-commerce platform inspired by AliExpress, built as a mini project
 | Azure PaaS | Blob Storage, Event Hubs, Flexible Server, App Service |
 | Maven | Backend build & dependency management |
 | Angular CLI | Frontend build tooling |
+| Make | Project orchestration (Makefile) |
 
 ---
 
@@ -543,7 +563,31 @@ Additional for specific profiles:
 
 ## Getting Started
 
-### Profile 1 — Local (Docker Compose)
+### Option A — One command (Makefile)
+
+```bash
+make all          # Start infra + backend + frontend
+make stop         # Stop everything
+make help         # Show all available targets
+```
+
+### Option B — IntelliJ IDEA (with debug)
+
+The project includes shared IntelliJ Run Configurations (`.run/` directory). Open the project in IntelliJ and select from the **Run** dropdown:
+
+| Configuration | Type | Action |
+|---|---|---|
+| **All (Infra + Backend + Frontend)** | Compound | Launches everything in one click |
+| **Infra (Docker Compose)** | Docker | Starts PostgreSQL, Kafka, Minio, Keycloak |
+| **Backend (Local)** | Spring Boot | Runs backend with `local` profile (supports breakpoints) |
+| **Frontend (ng serve)** | npm | Starts Angular dev server |
+| **Backend Tests** | JUnit | Runs all backend tests |
+
+To **debug the backend**: select `Backend (Local)` and click the **Debug** button. Set breakpoints anywhere in the code.
+
+### Option C — Manual (step by step)
+
+#### Profile 1 — Local (Docker Compose)
 
 ```bash
 # 1. Start all infrastructure services
@@ -561,8 +605,8 @@ npm install && ng serve
 
 | Service | URL | Credentials |
 |---|---|---|
-| Backend API | http://localhost:8080 | - |
-| Swagger UI | http://localhost:8080/swagger-ui.html | - |
+| Backend API | http://localhost:8080/api | - |
+| Swagger UI | http://localhost:8080/api/swagger-ui.html | - |
 | Frontend | http://localhost:4200 | - |
 | PostgreSQL | localhost:5432 | `aliexpress` / `aliexpress_secret` |
 | Kafka | localhost:9092 | - |
@@ -571,7 +615,7 @@ npm install && ng serve
 | Minio Console | http://localhost:9001 | `minioadmin` / `minioadmin` |
 | Keycloak Admin | http://localhost:8180 | `admin` / `admin` |
 
-### Profile 2 — Local Kubernetes (Minikube)
+#### Profile 2 — Local Kubernetes (Minikube)
 
 ```bash
 # One-command bootstrap
@@ -585,7 +629,7 @@ chmod +x setup-minikube.sh
 
 Then open http://mini-aliexpress.local
 
-### Profile 3 — Azure AKS
+#### Profile 3 — Azure AKS
 
 ```bash
 # 1. Provision AKS cluster with Terraform
@@ -602,7 +646,7 @@ export ACR_NAME="minialiexpressacr"
 ./deploy-aks.sh
 ```
 
-### Profile 4 — Azure Services (PaaS, no Kubernetes)
+#### Profile 4 — Azure Services (PaaS, no Kubernetes)
 
 ```bash
 # Provision everything with Terraform
@@ -621,61 +665,68 @@ terraform output
 ```
 mini-aliexpress/
 │
-├── backend/                          # Spring Boot 3.5 (Hexagonal Architecture)
-│   ├── src/main/java/                #   Application source code
+├── backend/                              # Spring Boot 3.5 (Hexagonal Architecture)
+│   ├── src/main/java/                    #   Application source code
 │   ├── src/main/resources/
-│   │   ├── application.yaml          #   Spring configuration
-│   │   └── db/changelog/             #   Liquibase migrations
-│   ├── src/test/                     #   Tests
+│   │   ├── application.yaml              #   Shared config (server, JPA, Liquibase, OpenAPI)
+│   │   ├── application-local.yaml        #   Profile: local Docker Compose
+│   │   ├── application-local-k8s.yaml    #   Profile: Minikube
+│   │   ├── application-azure-aks.yaml    #   Profile: Azure AKS
+│   │   ├── application-azure-services.yaml #  Profile: Azure PaaS
+│   │   └── db/changelog/                 #   Liquibase migrations
+│   ├── src/test/                         #   Tests (JUnit, Testcontainers, Cucumber)
+│   ├── Dockerfile                        #   Multi-stage build (Maven + JRE Alpine)
 │   └── pom.xml
 │
-├── frontend/         # Angular 18 (Standalone Components)
-│   ├── src/app/                      #   Application source code
+├── frontend/                             # Angular 18 (Standalone Components)
+│   ├── src/app/                          #   Application source code
+│   ├── Dockerfile                        #   Multi-stage build (Node + Nginx)
 │   ├── angular.json
 │   └── package.json
 │
-├── infra/                            # Infrastructure as Code
+├── infra/                                # Infrastructure as Code
 │   ├── docker/
-│   │   └── local/                    #   Profile 1: Docker Compose
+│   │   └── local/                        #   Profile 1: Docker Compose
 │   │       ├── docker-compose.yml
 │   │       ├── .env
 │   │       └── config/
-│   │           ├── keycloak/         #     Realm export (auto-import)
-│   │           └── postgres/         #     Init scripts
+│   │           ├── keycloak/             #     Realm export (auto-import)
+│   │           └── postgres/             #     Init scripts
 │   │
 │   ├── k8s/
-│   │   ├── local/                    #   Profile 2: Minikube
-│   │   │   ├── helm/mini-aliexpress/ #     Helm chart + Bitnami deps
-│   │   │   └── scripts/              #     setup-minikube.sh
+│   │   ├── local/                        #   Profile 2: Minikube
+│   │   │   ├── helm/mini-aliexpress/     #     Helm chart + Bitnami deps
+│   │   │   └── scripts/                  #     setup-minikube.sh
 │   │   │
-│   │   └── azure-aks/                #   Profile 3: AKS
-│   │       ├── helm/mini-aliexpress/ #     Helm chart (prod values, HPA)
-│   │       └── scripts/              #     deploy-aks.sh
+│   │   └── azure-aks/                    #   Profile 3: AKS
+│   │       ├── helm/mini-aliexpress/     #     Helm chart (prod values, HPA)
+│   │       └── scripts/                  #     deploy-aks.sh
 │   │
 │   └── terraform/
-│       ├── modules/                  #   Reusable Terraform modules
-│       │   ├── aks/                  #     Azure Kubernetes Service
-│       │   ├── postgresql/           #     Azure Database for PostgreSQL
-│       │   ├── blob-storage/         #     Azure Blob Storage
-│       │   ├── event-hubs/           #     Azure Event Hubs (Kafka replacement)
-│       │   ├── keycloak-vm/          #     Keycloak on Azure VM
-│       │   ├── networking/           #     VNet, subnets, DNS
-│       │   └── container-registry/   #     Azure Container Registry
+│       ├── modules/                      #   Reusable Terraform modules
+│       │   ├── aks/                      #     Azure Kubernetes Service
+│       │   ├── postgresql/               #     Azure Database for PostgreSQL
+│       │   ├── blob-storage/             #     Azure Blob Storage
+│       │   ├── event-hubs/               #     Azure Event Hubs (Kafka replacement)
+│       │   ├── keycloak-vm/              #     Keycloak on Azure VM
+│       │   ├── networking/               #     VNet, subnets, DNS
+│       │   └── container-registry/       #     Azure Container Registry
 │       │
 │       └── environments/
-│           ├── azure-aks/            #   Profile 3: Terraform for AKS infra
-│           │   ├── main.tf
-│           │   ├── variables.tf
-│           │   ├── outputs.tf
-│           │   └── terraform.tfvars
-│           │
-│           └── azure-services/       #   Profile 4: Terraform for PaaS infra
-│               ├── main.tf
-│               ├── variables.tf
-│               ├── outputs.tf
-│               └── terraform.tfvars
+│           ├── azure-aks/                #   Profile 3: Terraform for AKS infra
+│           └── azure-services/           #   Profile 4: Terraform for PaaS infra
 │
-└── README.md                         # This file
+├── .run/                                 # IntelliJ IDEA Run Configurations
+│   ├── All (Infra + Backend + Frontend).run.xml
+│   ├── Backend (Local).run.xml           #   Spring Boot with debug support
+│   ├── Frontend (ng serve).run.xml
+│   ├── Infra (Docker Compose).run.xml
+│   └── Backend Tests.run.xml
+│
+├── Makefile                              # Project orchestration (make all / stop / test)
+├── TODO.md                               # Project checklist
+├── .gitignore
+└── README.md                             # This file
 ```
 
 ---
@@ -715,12 +766,46 @@ mini-aliexpress/
 
 ---
 
+## Makefile Reference
+
+```bash
+make all                  # Start infra + backend + frontend
+make stop                 # Stop everything
+make clean                # Stop + remove volumes + clean builds
+
+make infra                # Start Docker Compose services
+make infra-down           # Stop Docker Compose services
+make infra-logs           # Tail infrastructure logs
+make infra-ps             # Show running containers
+
+make backend              # Start Spring Boot backend
+make backend-build        # Build backend JAR
+make backend-test         # Run backend unit tests
+
+make frontend             # Start Angular dev server
+make frontend-install     # Install npm dependencies
+make frontend-build       # Build for production
+make frontend-test        # Run frontend unit tests
+
+make test                 # Run all unit tests (backend + frontend)
+make test-integration     # Run Testcontainers integration tests
+make test-cucumber        # Run Cucumber BDD tests
+make test-performance     # Run Gatling performance tests
+make test-mutation        # Run PITest mutation tests
+
+make security-scan        # Run OWASP + Trivy scans
+make sonar                # Run SonarQube analysis
+make docker-build         # Build backend + frontend Docker images
+```
+
+---
+
 ## API Documentation
 
 Once the backend is running, interactive API documentation is available via Swagger UI:
 
 ```
-http://localhost:8080/swagger-ui.html
+http://localhost:8080/api/swagger-ui.html
 ```
 
 ---
@@ -734,6 +819,121 @@ backend/src/main/resources/db/changelog/
 ```
 
 Migrations run automatically on application startup.
+
+---
+
+## Git Branching Strategy (Gitflow)
+
+The project follows the **Gitflow** branching model to organize development, releases, and hotfixes.
+
+```
+main ─────●────────────────────────●──────────────●──── (production-ready)
+           \                      / \            /
+            \     release/1.0 ───●   \          /
+             \   /                    \        /
+develop ──────●────●────●────●─────────●──────●────── (integration)
+               \      / \      /
+    feature/    ●────●   ●────●
+    product-crud      cart-management
+```
+
+### Branch Types
+
+| Branch | From | Merges into | Purpose |
+|---|---|---|---|
+| `main` | - | - | Production-ready code. Every commit is a release. |
+| `develop` | `main` | - | Integration branch. All features merge here first. |
+| `feature/*` | `develop` | `develop` | New feature development (e.g., `feature/product-crud`, `feature/cart-management`) |
+| `release/*` | `develop` | `main` + `develop` | Release preparation, version bump, last-minute fixes (e.g., `release/1.0.0`) |
+| `hotfix/*` | `main` | `main` + `develop` | Critical production bug fixes (e.g., `hotfix/fix-checkout-crash`) |
+| `bugfix/*` | `develop` | `develop` | Non-critical bug fixes during development |
+
+### Naming Conventions
+
+```
+feature/product-crud
+feature/cart-management
+feature/order-checkout
+feature/keycloak-auth
+feature/kafka-events
+feature/seller-dashboard
+bugfix/fix-cart-total-calculation
+release/1.0.0
+hotfix/fix-payment-timeout
+```
+
+### Workflow
+
+1. **Start a feature** — branch from `develop`
+   ```bash
+   git checkout develop
+   git checkout -b feature/product-crud
+   ```
+
+2. **Work on the feature** — commit frequently with clear messages
+   ```bash
+   git add .
+   git commit -m "feat(product): add product CRUD endpoints"
+   ```
+
+3. **Finish a feature** — merge back into `develop` via Pull Request
+   ```bash
+   git checkout develop
+   git merge --no-ff feature/product-crud
+   git branch -d feature/product-crud
+   ```
+
+4. **Prepare a release** — branch from `develop`, bump version, final fixes
+   ```bash
+   git checkout develop
+   git checkout -b release/1.0.0
+   # bump version, final testing
+   git checkout main && git merge --no-ff release/1.0.0
+   git tag -a v1.0.0 -m "Release 1.0.0"
+   git checkout develop && git merge --no-ff release/1.0.0
+   git branch -d release/1.0.0
+   ```
+
+5. **Hotfix** — branch from `main`, fix, merge into both `main` and `develop`
+   ```bash
+   git checkout main
+   git checkout -b hotfix/fix-payment-timeout
+   # fix the issue
+   git checkout main && git merge --no-ff hotfix/fix-payment-timeout
+   git tag -a v1.0.1 -m "Hotfix 1.0.1"
+   git checkout develop && git merge --no-ff hotfix/fix-payment-timeout
+   git branch -d hotfix/fix-payment-timeout
+   ```
+
+### Commit Message Convention
+
+The project uses [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+<type>(<scope>): <short description>
+
+[optional body]
+```
+
+| Type | Usage |
+|---|---|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `docs` | Documentation only |
+| `refactor` | Code restructuring (no behavior change) |
+| `test` | Adding or updating tests |
+| `chore` | Build, CI, config changes |
+| `perf` | Performance improvement |
+| `style` | Formatting, no logic change |
+
+**Examples:**
+```
+feat(product): add product search with pagination
+fix(cart): correct total calculation with discounts
+test(order): add Testcontainers integration tests for OrderRepository
+chore(infra): add Kafka and Minio to Docker Compose
+docs: update README with Gitflow branching strategy
+```
 
 ---
 

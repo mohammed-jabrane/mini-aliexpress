@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Backend (Local)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="backend" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ma.mohammedjabrane.mini_aliexpress_backend.MiniAliexpressBackendApplication" />
+    <option name="ACTIVE_PROFILES" value="local" />
+    <option name="PROGRAM_PARAMETERS" value="" />
+    <envs>
+      <env name="SPRING_PROFILES_ACTIVE" value="local" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
