@@ -1,0 +1,39 @@
+# ============================================================
+# Profile: local-k8s (Minikube)
+# ============================================================
+
+spring:
+  # ── DataSource ─────────────────────────────────
+  datasource:
+    url: jdbc:postgresql://mini-aliexpress-postgresql:5432/mini_aliexpress
+    username: aliexpress
+    password: aliexpress_secret
+    driver-class-name: org.postgresql.Driver
+
+  # ── Kafka ──────────────────────────────────────
+  kafka:
+    bootstrap-servers: mini-aliexpress-kafka:9092
+    consumer:
+      group-id: mini-aliexpress
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  # ── Security (Keycloak) ────────────────────────
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://mini-aliexpress-keycloak:8080/realms/mini-aliexpress
+
+# ── Minio S3 ──────────────────────────────────
+minio:
+  url: http://mini-aliexpress-minio:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket:
+    product-images: product-images
+    user-avatars: user-avatars

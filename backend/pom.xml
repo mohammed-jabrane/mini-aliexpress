@@ -13,25 +13,32 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>backend</name>
     <description>Mini AliExpress Backend</description>
-    <url/>
+
+    <url>https://github.com/mohammed-jabrane/mini-aliexpress</url>
+
     <licenses>
         <license/>
     </licenses>
+
     <developers>
         <developer>
             <name>Mohammed JABRANE</name>
         </developer>
     </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+
     <properties>
         <java.version>17</java.version>
         <spring-cloud-azure.version>6.1.0</spring-cloud-azure.version>
-        <openapi-doc>2.8.16</openapi-doc>
+        <springdoc-openapi.version>2.8.16</springdoc-openapi.version>
+        <minio.version>8.5.14</minio.version>
+        <cucumber.version>7.21.1</cucumber.version>
+        <pitest.version>1.17.4</pitest.version>
+        <pitest-junit5.version>1.2.3</pitest-junit5.version>
+        <gatling.version>3.14.9</gatling.version>
+        <gatling-maven.version>4.21.4</gatling-maven.version>
+
+        <owasp-dependency-check.version>11.1.1</owasp-dependency-check.version>
+        <sonar-maven.version>4.0.0.4121</sonar-maven.version>
     </properties>
     <dependencies>
         <dependency>
@@ -51,13 +58,30 @@
             <artifactId>spring-cloud-azure-starter-jdbc-postgresql</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>${openapi-doc}</version>
+            <version>${springdoc-openapi.version}</version>
         </dependency>
 
         <dependency>
@@ -85,6 +109,70 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>minio</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.gatling.highcharts</groupId>
+            <artifactId>gatling-charts-highcharts</artifactId>
+            <version>${gatling.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -129,6 +217,61 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <!-- PITest — Mutation Testing -->
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>${pitest.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>${pitest-junit5.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <targetClasses>
+                        <param>ma.mohammedjabrane.mini_aliexpress_backend.domain.*</param>
+                        <param>ma.mohammedjabrane.mini_aliexpress_backend.application.*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>ma.mohammedjabrane.mini_aliexpress_backend.*</param>
+                    </targetTests>
+                    <mutationThreshold>70</mutationThreshold>
+                    <outputFormats>
+                        <param>HTML</param>
+                        <param>XML</param>
+                    </outputFormats>
+                </configuration>
+            </plugin>
+            <!-- Gatling — Performance Testing -->
+            <plugin>
+                <groupId>io.gatling</groupId>
+                <artifactId>gatling-maven-plugin</artifactId>
+                <version>${gatling-maven.version}</version>
+                <configuration>
+                    <simulationsFolder>src/test/java</simulationsFolder>
+                </configuration>
+            </plugin>
+            <!-- OWASP Dependency-Check — SCA -->
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>${owasp-dependency-check.version}</version>
+                <configuration>
+                    <failBuildOnCVSS>7</failBuildOnCVSS>
+                    <formats>
+                        <format>HTML</format>
+                        <format>JSON</format>
+                    </formats>
+                </configuration>
+            </plugin>
+            <!-- SonarQube — Code Quality & Security -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar-maven.version}</version>
             </plugin>
         </plugins>
     </build>

@@ -1,31 +1,33 @@
 # Mini AliExpress — Project Checklist
 
-## 1. Project Setup
+## 1. Project Setup (FA01)
 
-- [ ] Initialize root Git repository
-- [ ] Create `.gitignore` (root level)
-- [ ] Define branching strategy (main, develop, feature/*)
+- [x] Initialize root Git repository
+- [x] Create `.gitignore` (root level)
+- [x] Define branching strategy (main, develop, feature/*)
 
-### Backend Setup
+### Backend Setup (FA02)
 
-- [ ] Verify `pom.xml` dependencies (Spring Boot 3.5, JPA, Web, Lombok, Liquibase, OpenAPI)
-- [ ] Add Kafka dependency (`spring-kafka`)
-- [ ] Add Minio dependency (`minio` Java SDK)
-- [ ] Add Keycloak / Spring Security OAuth2 Resource Server dependency
-- [ ] Add Testcontainers dependencies (scope test)
-- [ ] Add Cucumber dependencies (scope test)
-- [ ] Add PITest Maven plugin
-- [ ] Add Gatling Maven plugin
-- [ ] Add OWASP Dependency-Check Maven plugin
-- [ ] Add SonarQube Maven plugin
-- [ ] Configure `application.yaml` per profile (`local`, `local-k8s`, `azure-aks`, `azure-services`)
-- [ ] Create `application-local.yaml`
-- [ ] Create `application-local-k8s.yaml`
-- [ ] Create `application-azure-aks.yaml`
-- [ ] Create `application-azure-services.yaml`
-- [ ] Create Dockerfile (multi-stage build)
+- [x] Verify `pom.xml` dependencies (Spring Boot 3.5, JPA, Web, Lombok, Liquibase, OpenAPI)
+- [x] Add Kafka dependency (`spring-kafka`)
+- [x] Add Minio dependency (`minio` Java SDK)
+- [x] Add Keycloak / Spring Security OAuth2 Resource Server dependency
+- [x] Add Testcontainers dependencies (scope test)
+- [x] Add Cucumber dependencies (scope test)
+- [x] Add PITest Maven plugin
+- [x] Add Gatling Maven plugin
+- [x] Add OWASP Dependency-Check Maven plugin
+- [x] Add SonarQube Maven plugin
+- [x] Configure `application.yaml` per profile (`local`, `local-k8s`, `azure-aks`, `azure-services`)
+- [x] Create `application-local.yaml`
+- [x] Create `application-local-k8s.yaml`
+- [x] Create `application-azure-aks.yaml`
+- [x] Create `application-azure-services.yaml`
+- [x] Create Dockerfile (multi-stage build)
+- [x] Add plugin for run local (docker-compose, frontend, backend)
+- [x] Add configuration for IntelliJ mode for run all 
 
-### Frontend Setup
+### Frontend Setup (FA03)
 
 - [ ] Install NgRx (`@ngrx/store`, `@ngrx/effects`, `@ngrx/store-devtools`, `@ngrx/entity`)
 - [ ] Install `keycloak-angular` + `keycloak-js`

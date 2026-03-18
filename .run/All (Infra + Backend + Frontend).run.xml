@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="All (Infra + Backend + Frontend)" type="CompoundRunConfigurationType">
+    <toRun name="Infra (Docker Compose)" type="docker-deploy" />
+    <toRun name="Backend (Local)" type="SpringBootApplicationConfigurationType" />
+    <toRun name="Frontend (ng serve)" type="js.build_tools.npm" />
+    <method v="2" />
+  </configuration>
+</component>

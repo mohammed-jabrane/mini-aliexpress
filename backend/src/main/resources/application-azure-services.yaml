@@ -1,0 +1,46 @@
+# ============================================================
+# Profile: azure-services (Azure PaaS — no Kubernetes)
+# ============================================================
+
+spring:
+  # ── DataSource (Azure Database for PostgreSQL) ─
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  # ── Azure Event Hubs (Kafka-compatible) ────────
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: >
+        org.apache.kafka.common.security.plain.PlainLoginModule required
+        username="$ConnectionString"
+        password="${SPRING_CLOUD_AZURE_EVENTHUBS_CONNECTION_STRING}";
+    consumer:
+      group-id: mini-aliexpress
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  # ── Security (Keycloak on Azure VM) ────────────
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI}
+
+# ── Azure Blob Storage (replaces Minio) ───────
+azure:
+  storage:
+    connection-string: ${AZURE_STORAGE_CONNECTION_STRING}
+    blob-endpoint: ${AZURE_STORAGE_BLOB_ENDPOINT}
+    container:
+      product-images: product-images
+      user-avatars: user-avatars

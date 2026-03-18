@@ -1,3 +1,45 @@
 spring:
   application:
-    name: backend
+    name: mini-aliexpress-backend
+  profiles:
+    active: local
+
+  # ── JPA ──────────────────────────────────────
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+
+  # ── Liquibase ────────────────────────────────
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+  # ── Jackson ──────────────────────────────────
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+# ── Server ───────────────────────────────────
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# ── Actuator ─────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+
+# ── OpenAPI ──────────────────────────────────
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
