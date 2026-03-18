@@ -1,0 +1,98 @@
+{
+  "realm": "mini-aliexpress",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "ROLE_USER",
+        "description": "Standard user role"
+      },
+      {
+        "name": "ROLE_SELLER",
+        "description": "Seller role — can manage products"
+      },
+      {
+        "name": "ROLE_ADMIN",
+        "description": "Administrator role"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "mini-aliexpress-backend",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "backend-secret",
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "serviceAccountsEnabled": true,
+      "redirectUris": ["http://localhost:8080/*"],
+      "webOrigins": ["http://localhost:8080"]
+    },
+    {
+      "clientId": "mini-aliexpress-frontend",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "redirectUris": ["http://localhost:4200/*"],
+      "webOrigins": ["http://localhost:4200"]
+    }
+  ],
+  "users": [
+    {
+      "username": "user",
+      "enabled": true,
+      "email": "user@mini-aliexpress.local",
+      "firstName": "Test",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "user",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ROLE_USER"]
+    },
+    {
+      "username": "seller",
+      "enabled": true,
+      "email": "seller@mini-aliexpress.local",
+      "firstName": "Test",
+      "lastName": "Seller",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "seller",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ROLE_USER", "ROLE_SELLER"]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@mini-aliexpress.local",
+      "firstName": "Test",
+      "lastName": "Admin",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ROLE_USER", "ROLE_ADMIN"]
+    }
+  ]
+}

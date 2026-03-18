@@ -1,0 +1,7 @@
+subscription_id           = "CHANGE_ME"
+project                   = "mini-aliexpress"
+location                  = "francecentral"
+postgresql_admin_password = "CHANGE_ME"
+keycloak_admin_password   = "CHANGE_ME"
+ssh_public_key            = "CHANGE_ME"
+app_service_sku           = "B1"

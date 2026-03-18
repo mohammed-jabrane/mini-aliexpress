@@ -1,0 +1,120 @@
+# ============================================================
+# Mini AliExpress — Azure AKS values
+# ============================================================
+
+# ── Backend ──────────────────────────────────────────────────
+backend:
+  replicaCount: 2
+  image:
+    repository: <ACR_NAME>.azurecr.io/mini-aliexpress-backend
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 8080
+  env:
+    SPRING_PROFILES_ACTIVE: azure-aks
+    SPRING_DATASOURCE_URL: jdbc:postgresql://mini-aliexpress-postgresql:5432/mini_aliexpress
+    SPRING_DATASOURCE_USERNAME: aliexpress
+    SPRING_DATASOURCE_PASSWORD: aliexpress_secret
+    SPRING_KAFKA_BOOTSTRAP_SERVERS: mini-aliexpress-kafka:9092
+    MINIO_URL: http://mini-aliexpress-minio:9000
+    MINIO_ACCESS_KEY: minioadmin
+    MINIO_SECRET_KEY: minioadmin
+    KEYCLOAK_ISSUER_URI: http://mini-aliexpress-keycloak:8080/realms/mini-aliexpress
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPU: 70
+
+# ── Frontend ─────────────────────────────────────────────────
+frontend:
+  replicaCount: 2
+  image:
+    repository: <ACR_NAME>.azurecr.io/mini-aliexpress-frontend
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 80
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+# ── Ingress (NGINX Ingress Controller on AKS) ───────────────
+ingress:
+  enabled: true
+  className: nginx
+  host: mini-aliexpress.example.com
+  tls:
+    enabled: true
+    secretName: mini-aliexpress-tls
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+
+# ── PostgreSQL (Bitnami sub-chart) ───────────────────────────
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: postgres_admin
+    username: aliexpress
+    password: aliexpress_secret
+    database: mini_aliexpress
+  primary:
+    persistence:
+      size: 10Gi
+      storageClass: managed-premium
+
+# ── Kafka (Bitnami sub-chart) ────────────────────────────────
+kafka:
+  enabled: true
+  kraft:
+    enabled: true
+  listeners:
+    client:
+      protocol: PLAINTEXT
+  controller:
+    replicaCount: 3
+  broker:
+    replicaCount: 3
+    persistence:
+      size: 10Gi
+      storageClass: managed-premium
+
+# ── Minio (Bitnami sub-chart) ────────────────────────────────
+minio:
+  enabled: true
+  auth:
+    rootUser: minioadmin
+    rootPassword: minioadmin
+  defaultBuckets: "product-images,user-avatars"
+  persistence:
+    size: 20Gi
+    storageClass: managed-premium
+
+# ── Keycloak (Bitnami sub-chart) ─────────────────────────────
+keycloak:
+  enabled: true
+  auth:
+    adminUser: admin
+    adminPassword: admin
+  postgresql:
+    enabled: false
+  externalDatabase:
+    host: mini-aliexpress-postgresql
+    port: 5432
+    user: aliexpress
+    password: aliexpress_secret
+    database: keycloak

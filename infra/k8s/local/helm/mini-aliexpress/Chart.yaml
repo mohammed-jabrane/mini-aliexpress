@@ -1,0 +1,27 @@
+apiVersion: v2
+name: mini-aliexpress
+description: Mini AliExpress — local Minikube deployment
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+dependencies:
+  - name: postgresql
+    version: "16.4.1"
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+
+  - name: kafka
+    version: "31.2.0"
+    repository: https://charts.bitnami.com/bitnami
+    condition: kafka.enabled
+
+  - name: minio
+    version: "14.8.6"
+    repository: https://charts.bitnami.com/bitnami
+    condition: minio.enabled
+
+  - name: keycloak
+    version: "24.4.3"
+    repository: https://charts.bitnami.com/bitnami
+    condition: keycloak.enabled
