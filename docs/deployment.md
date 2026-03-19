@@ -30,11 +30,21 @@ The project supports **4 deployment profiles**, each with its own infrastructure
 
 ## Prerequisites
 
-- **Java** 17+
-- **Node.js** 18+ and **npm**
+- **Java** 17+ (managed via [jenv](https://www.jenv.be/) — `.java-version` pinned at project root)
+- **Node.js** 22+ and **npm** (managed via [nvm](https://github.com/nvm-sh/nvm) — `.nvmrc` pinned at project root)
 - **Docker** & **Docker Compose**
 - **Maven** 3.9+ (or use the included `mvnw` wrapper)
 - **Angular CLI** 18 (`npm install -g @angular/cli`)
+
+### Version Setup
+
+```bash
+# Java — jenv reads .java-version automatically
+jenv local          # should show 17.0
+
+# Node — nvm reads .nvmrc
+nvm use             # switches to v22
+```
 
 Additional for specific profiles:
 

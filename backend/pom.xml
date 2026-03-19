@@ -33,7 +33,7 @@
         <minio.version>8.5.14</minio.version>
         <cucumber.version>7.21.1</cucumber.version>
         <pitest.version>1.17.4</pitest.version>
-        <pitest-junit5.version>1.2.3</pitest-junit5.version>
+        <pitest-junit5.version>1.2.2</pitest-junit5.version>
         <gatling.version>3.14.9</gatling.version>
         <gatling-maven.version>4.21.4</gatling-maven.version>
 
@@ -87,12 +87,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-docker-compose</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>

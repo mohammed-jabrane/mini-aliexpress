@@ -261,6 +261,8 @@ mini-aliexpress/
 ├── CONTRIBUTING.md                       # Gitflow, commit conventions, PR process
 ├── CHANGELOG.md                          # Release history
 ├── LICENSE.md                            # MIT license
+├── .java-version                         # jenv — pins Java 17
+├── .nvmrc                                # nvm — pins Node 22
 ├── .gitignore
 └── README.md                             # This file
 ```
