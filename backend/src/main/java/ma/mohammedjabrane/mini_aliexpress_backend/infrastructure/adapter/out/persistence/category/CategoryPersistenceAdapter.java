@@ -1,4 +1,4 @@
-package ma.mohammedjabrane.mini_aliexpress_backend.infrastructure.adapter.out.persistence;
+package ma.mohammedjabrane.mini_aliexpress_backend.infrastructure.adapter.out.persistence.category;
 
 import lombok.RequiredArgsConstructor;
 import ma.mohammedjabrane.mini_aliexpress_backend.domain.model.Category;
@@ -40,5 +40,21 @@ public class CategoryPersistenceAdapter implements CategoryRepositoryPort {
         return jpaRepository.findByParentIdIsNull().stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Category save(Category category) {
+        CategoryJpaEntity entity = mapper.toEntity(category);
+        return mapper.toDomain(jpaRepository.save(entity));
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpaRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return jpaRepository.existsById(id);
     }
 }

@@ -1,4 +1,4 @@
-package ma.mohammedjabrane.mini_aliexpress_backend.infrastructure.adapter.out.persistence;
+package ma.mohammedjabrane.mini_aliexpress_backend.infrastructure.adapter.out.persistence.product;
 
 import ma.mohammedjabrane.mini_aliexpress_backend.domain.model.Product;
 import org.mapstruct.Mapper;

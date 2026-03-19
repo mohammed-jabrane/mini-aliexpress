@@ -3,10 +3,10 @@ package ma.mohammedjabrane.mini_aliexpress_backend.application.dto;
 import java.util.List;
 import java.util.UUID;
 
-public record CategoryDTO(
+public record CategoryResponseDTO(
         UUID id,
         String name,
         UUID parentId,
-        List<CategoryDTO> children
+        List<CategoryResponseDTO> children
 ) {
 }

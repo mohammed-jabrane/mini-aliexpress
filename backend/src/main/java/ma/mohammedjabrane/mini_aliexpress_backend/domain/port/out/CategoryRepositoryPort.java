@@ -15,4 +15,10 @@ public interface CategoryRepositoryPort {
     List<Category> findByParentId(UUID parentId);
 
     List<Category> findRootCategories();
+
+    Category save(Category category);
+
+    void deleteById(UUID id);
+
+    boolean existsById(UUID id);
 }

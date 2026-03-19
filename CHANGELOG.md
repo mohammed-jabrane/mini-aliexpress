@@ -28,15 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Azure PaaS (no Kubernetes) Terraform deployment profile
 - Terraform modules: AKS, PostgreSQL, Blob Storage, Event Hubs, Keycloak VM, Networking, Container Registry
 
-## [2.2.0] — Planned
-
-### Added
-- Minikube Helm chart for local Kubernetes deployment
-- Azure AKS Terraform + Helm deployment profile
-- Admin Panel
-- Comprehensive testing strategy (unit, integration, BDD, performance, security)
-
-## [2.1.0] - GitHub Actions CI Pipeline & SonarCloud
+## [2.2.0] - GitHub Actions CI, SonarCloud & GitHub Flow
 
 ### Added
 - GitHub Actions CI workflow (`.github/workflows/ci.yml`) — required quality gate before merge
@@ -46,7 +38,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `sonar-project.properties` at repo root — defines `backend` and `frontend` modules with coverage paths
 - Frontend: install, unit tests (ChromeHeadless), production build, lcov coverage
 - `ci-passed` job aggregates all checks — use as required status check in branch protection rules
-- Node.js 24 opt-in (`FORCE_JAVASCRIPT_ACTIONS_TO_NODE24`) to suppress deprecation warnings
+- Recommended branch protection rules in `CONTRIBUTING.md`
+
+### Changed
+- Branching strategy: **Gitflow** → **GitHub Flow** (all branches from/to `main`, no `develop`)
+- CI triggers: only `main` branch (pull requests + pushes)
+- Merge strategy: squash merge for clean `main` history
+- GitHub Actions upgraded to Node.js 24: checkout@v6, setup-java@v5, setup-node@v6, upload-artifact@v7, cache@v5
 
 ## [2.0.0] - Core Module (Auth, Guards, Interceptors, Notifications)
 
