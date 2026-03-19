@@ -7,12 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - Admin Feature (Dashboard, User & Category Management)
+
 ### Added
+- Admin dashboard with platform metrics (Products, Categories, Orders, Users counts)
+- User management page with ban/unban functionality (`/admin/users`)
+- Category management page with full CRUD and pagination (10 per page) (`/admin/categories`)
+- Category form dialog for create/edit with parent category selection
+- `AdminService` — API service for dashboard stats, user management, and category CRUD
+- `AdminUser` and `DashboardStats` model interfaces
+- Admin menu in header toolbar (visible to `ROLE_ADMIN` users via computed signal)
+- `admin.routes.ts` child routes: dashboard, users, categories
 - Lazy-loaded routes for all feature modules: `/cart`, `/orders`, `/user`, `/seller`, `/admin` (FA13)
 - `authGuard` on `/cart`, `/orders`, `/user` — redirects unauthenticated users to Keycloak login
 - `authGuard` + `roleGuard` on `/seller` (`ROLE_SELLER`) and `/admin` (`ROLE_ADMIN`)
-- Placeholder page components: `CartPageComponent`, `OrderHistoryComponent`, `ProfileComponent`, `ProductManagementComponent`, `DashboardComponent`
-- Feature route files: `cart.routes.ts`, `order.routes.ts`, `user.routes.ts`, `seller.routes.ts`, `admin.routes.ts`
+- Placeholder page components: `CartPageComponent`, `OrderHistoryComponent`, `ProfileComponent`, `ProductManagementComponent`
+- Feature route files: `cart.routes.ts`, `order.routes.ts`, `user.routes.ts`, `seller.routes.ts`
+
+### Changed
+- `HeaderComponent.isAdmin` refactored from plain boolean to `computed` signal derived from `AuthKeycloakService.currentRoles`
+- `AuthKeycloakService` now merges roles from both `getUserRoles()` and `tokenParsed.realm_access.roles`
 
 ## [5.0.0] — Planned
 

@@ -52,10 +52,13 @@ See [Security](security.md) for Keycloak configuration and test user credentials
 
 ### Categories
 
-| Method | Endpoint               | Auth   | Description            |
-|--------|------------------------|--------|------------------------|
-| `GET`  | `/api/categories`      | Public | List all categories    |
-| `GET`  | `/api/categories/tree` | Public | Get category hierarchy |
+| Method   | Endpoint               | Auth          | Description            |
+|----------|------------------------|---------------|------------------------|
+| `GET`    | `/api/categories`      | Public        | List all categories    |
+| `GET`    | `/api/categories/tree` | Public        | Get category hierarchy |
+| `POST`   | `/api/categories`      | `ROLE_ADMIN`  | Create category        |
+| `PUT`    | `/api/categories/{id}` | `ROLE_ADMIN`  | Update category        |
+| `DELETE` | `/api/categories/{id}` | `ROLE_ADMIN`  | Delete category        |
 
 ### Cart
 
@@ -88,6 +91,14 @@ See [Security](security.md) for Keycloak configuration and test user credentials
 | `GET`  | `/api/seller/products`  | `ROLE_SELLER` | List seller's products        |
 | `GET`  | `/api/seller/orders`    | `ROLE_SELLER` | List incoming orders          |
 | `GET`  | `/api/seller/inventory` | `ROLE_SELLER` | View inventory / stock levels |
+
+### Admin
+
+| Method | Endpoint                          | Auth         | Description           |
+|--------|-----------------------------------|--------------|-----------------------|
+| `GET`  | `/api/admin/users`                | `ROLE_ADMIN` | List all users        |
+| `PUT`  | `/api/admin/users/{userId}/ban`   | `ROLE_ADMIN` | Ban a user            |
+| `PUT`  | `/api/admin/users/{userId}/unban` | `ROLE_ADMIN` | Unban a user          |
 
 ---
 

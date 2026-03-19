@@ -25,7 +25,7 @@ The realm is auto-imported from [
 |---------------|---------------|--------------------------------------------------------------------|
 | `ROLE_USER`   | Standard user | Browse products, manage cart, place orders                         |
 | `ROLE_SELLER` | Seller        | All user capabilities + manage products, inventory, fulfill orders |
-| `ROLE_ADMIN`  | Administrator | All user capabilities + platform administration                    |
+| `ROLE_ADMIN`  | Administrator | All user capabilities + dashboard metrics, user management (ban/unban), category CRUD |
 
 ### Clients
 

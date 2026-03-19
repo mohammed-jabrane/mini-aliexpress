@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, computed, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +18,7 @@ import { AuthKeycloakService } from '../../../core/auth/keycloak.service';
   standalone: true,
   imports: [
     FormsModule,
+    RouterLink,
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
@@ -39,6 +40,7 @@ export class HeaderComponent {
 
   readonly isLoggedIn = this.authService.isAuthenticated;
   readonly username = this.authService.currentUsername;
+  readonly isAdmin = computed(() => this.authService.currentRoles().includes('ROLE_ADMIN'));
 
   onSearch(): void {
     const query = this.searchQuery.trim();

@@ -117,6 +117,14 @@ A full-stack e-commerce platform inspired by AliExpress, built as a mini project
 | Order Fulfillment | View incoming orders, update shipping status |
 | Sales Analytics | Basic revenue & order count metrics |
 
+### Admin Dashboard
+
+| Feature | Description |
+|---|---|
+| Platform Metrics | Dashboard with product, category, order and user counts |
+| User Management | List users, ban/unban accounts with confirmation |
+| Category Management | Full CRUD on categories (create, edit, delete with form dialog) |
+
 ### Event-Driven Workflows (Kafka)
 
 | Event | Producer | Consumer | Action |
@@ -210,6 +218,9 @@ mini-aliexpress/
 │   │   │   └── services/                 #       NotificationService (MatSnackBar wrapper)
 │   │   ├── shared/                       #     Reusable components, pipes, mappers
 │   │   └── features/                     #     Lazy-loaded feature modules
+│   │       ├── product/                  #       Product listing, detail, search
+│   │       ├── admin/                    #       Admin: dashboard, user mgmt, category CRUD
+│   │       └── ...
 │   ├── Dockerfile                        #   Multi-stage build (Node + Nginx)
 │   ├── angular.json
 │   ├── package.json

@@ -267,10 +267,10 @@
 
 ### Feature — Admin (FA15)
 
-- [ ] Create `features/admin/admin.routes.ts` (lazy-loaded, role-guarded)
-- [ ] Create `features/admin/pages/dashboard/` (platform metrics)
-- [ ] Create `features/admin/pages/user-management/` (list, ban)
-- [ ] Create `features/admin/pages/category-management/` (CRUD categories)
+- [x] Create `features/admin/admin.routes.ts` (lazy-loaded, role-guarded)
+- [x] Create `features/admin/pages/dashboard/` (platform metrics)
+- [x] Create `features/admin/pages/user-management/` (list, ban)
+- [x] Create `features/admin/pages/category-management/` (CRUD categories)
 
 ### NgRx Store (FA14)
 
