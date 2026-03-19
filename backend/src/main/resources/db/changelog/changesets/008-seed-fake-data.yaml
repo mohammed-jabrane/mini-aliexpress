@@ -52,7 +52,7 @@ databaseChangeLog:
         - insert:
             tableName: cart_item
             columns:
-              - column: { name: id, value: "ci000000-0000-0000-0000-000000000001" }
+              - column: { name: id, value: "c1000000-0000-0000-0000-000000000001" }
               - column: { name: cart_id, value: "ca000000-0000-0000-0000-000000000001" }
               - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000001" }
               - column: { name: quantity, valueNumeric: 2 }
@@ -60,7 +60,7 @@ databaseChangeLog:
         - insert:
             tableName: cart_item
             columns:
-              - column: { name: id, value: "ci000000-0000-0000-0000-000000000002" }
+              - column: { name: id, value: "c1000000-0000-0000-0000-000000000002" }
               - column: { name: cart_id, value: "ca000000-0000-0000-0000-000000000001" }
               - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000005" }
               - column: { name: quantity, valueNumeric: 1 }
@@ -69,7 +69,7 @@ databaseChangeLog:
         - insert:
             tableName: cart_item
             columns:
-              - column: { name: id, value: "ci000000-0000-0000-0000-000000000003" }
+              - column: { name: id, value: "c1000000-0000-0000-0000-000000000003" }
               - column: { name: cart_id, value: "ca000000-0000-0000-0000-000000000002" }
               - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000002" }
               - column: { name: quantity, valueNumeric: 1 }
@@ -112,7 +112,7 @@ databaseChangeLog:
         - insert:
             tableName: order_item
             columns:
-              - column: { name: id, value: "0i000000-0000-0000-0000-000000000001" }
+              - column: { name: id, value: "01000000-0000-0000-0000-000000000001" }
               - column: { name: order_id, value: "0d000000-0000-0000-0000-000000000001" }
               - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000001" }
               - column: { name: product_name, value: "Wireless Bluetooth Earbuds Pro" }
@@ -121,7 +121,7 @@ databaseChangeLog:
         - insert:
             tableName: order_item
             columns:
-              - column: { name: id, value: "0i000000-0000-0000-0000-000000000002" }
+              - column: { name: id, value: "01000000-0000-0000-0000-000000000002" }
               - column: { name: order_id, value: "0d000000-0000-0000-0000-000000000001" }
               - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000005" }
               - column: { name: product_name, value: "Yoga Mat Premium Non-Slip" }
@@ -131,7 +131,7 @@ databaseChangeLog:
         - insert:
             tableName: order_item
             columns:
-              - column: { name: id, value: "0i000000-0000-0000-0000-000000000003" }
+              - column: { name: id, value: "01000000-0000-0000-0000-000000000003" }
               - column: { name: order_id, value: "0d000000-0000-0000-0000-000000000002" }
               - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000002" }
               - column: { name: product_name, value: "Ultra Slim Laptop 14-inch" }
@@ -141,7 +141,7 @@ databaseChangeLog:
         - insert:
             tableName: order_item
             columns:
-              - column: { name: id, value: "0i000000-0000-0000-0000-000000000004" }
+              - column: { name: id, value: "01000000-0000-0000-0000-000000000004" }
               - column: { name: order_id, value: "0d000000-0000-0000-0000-000000000003" }
               - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000003" }
               - column: { name: product_name, value: "Classic Cotton T-Shirt" }
@@ -150,7 +150,7 @@ databaseChangeLog:
         - insert:
             tableName: order_item
             columns:
-              - column: { name: id, value: "0i000000-0000-0000-0000-000000000005" }
+              - column: { name: id, value: "01000000-0000-0000-0000-000000000005" }
               - column: { name: order_id, value: "0d000000-0000-0000-0000-000000000003" }
               - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000004" }
               - column: { name: product_name, value: "Stainless Steel Kitchen Knife Set" }
