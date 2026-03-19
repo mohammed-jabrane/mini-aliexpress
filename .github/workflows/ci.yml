@@ -132,7 +132,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           JAVA_HOME: ${{ env.JAVA_HOME }}
 
-  # ─── Quality Gate (PR only — blocks merge if failed) ────
+  # ─── Quality Gate (PR only — required status check to block merge) ─
   ci-passed:
     name: CI Quality Gate
     runs-on: ubuntu-latest
@@ -155,11 +155,12 @@ jobs:
           fi
           echo "All checks passed"
 
-  # ─── Docker Push (push to main or tag — CI already passed on PR) ───
+  # ─── Docker Push (push only — runs after build/tests pass) ─────────
   docker-push:
     name: Docker — Build & Push Images
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
+    needs: [backend-build, frontend-build]
     steps:
       - uses: actions/checkout@v6
 
