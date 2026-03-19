@@ -33,6 +33,12 @@ spring:
         jwt:
           issuer-uri: http://localhost:8180/realms/mini-aliexpress
 
+# ── Swagger OAuth2 ───────────────────────────
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: mini-aliexpress-backend
+
 # ── Minio S3 ──────────────────────────────────
 minio:
   url: http://localhost:9002
