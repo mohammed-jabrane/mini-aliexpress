@@ -33,12 +33,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Minikube Helm chart for local Kubernetes deployment
 - Azure AKS Terraform + Helm deployment profile
-
-## [2.1.0] — Planned
-
-### Added
 - Admin Panel
 - Comprehensive testing strategy (unit, integration, BDD, performance, security)
+
+## [2.1.0] - GitHub Actions CI Pipeline & SonarCloud
+
+### Added
+- GitHub Actions CI workflow (`.github/workflows/ci.yml`) — required quality gate before merge
+- Backend: build, unit tests, JaCoCo coverage report
+- JaCoCo Maven plugin (`jacoco-maven-plugin` 0.8.12) — generates XML/HTML coverage on `mvn verify`
+- SonarCloud: monorepo analysis (backend + frontend in one project) via `SonarSource/sonarcloud-github-action@v3`
+- `sonar-project.properties` at repo root — defines `backend` and `frontend` modules with coverage paths
+- Frontend: install, unit tests (ChromeHeadless), production build, lcov coverage
+- `ci-passed` job aggregates all checks — use as required status check in branch protection rules
+- Node.js 24 opt-in (`FORCE_JAVASCRIPT_ACTIONS_TO_NODE24`) to suppress deprecation warnings
 
 ## [2.0.0] - Core Module (Auth, Guards, Interceptors, Notifications)
 

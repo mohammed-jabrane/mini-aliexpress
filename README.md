@@ -49,7 +49,7 @@ A full-stack e-commerce platform inspired by AliExpress, built as a mini project
 | Trivy | - | Container & dependency CVE scanning |
 | OWASP Dependency-Check | 11.1 | SCA (known CVEs in dependencies) |
 | OWASP ZAP | - | DAST (runtime vulnerability scanning) |
-| SonarQube | - | Code quality, security hotspots, coverage |
+| SonarCloud | - | Code quality, security hotspots, coverage (hosted) |
 | Checkmarx | - | SAST (static code analysis) |
 | Checkov | - | Terraform IaC security scanning |
 
@@ -158,7 +158,7 @@ The project implements a **multi-layered testing pyramid** covering all quality 
 | **Functional (BDD)** | Cucumber + Gherkin | - | `./mvnw verify -Pcucumber` |
 | **E2E** | - | Cypress | `npx cypress run` |
 | **Performance** | JMeter, Gatling | - | `jmeter -n -t ...` / `./mvnw gatling:test` |
-| **Security (SAST)** | Checkmarx, SonarQube | SonarQube, ESLint | CI pipeline |
+| **Security (SAST)** | Checkmarx, SonarCloud | SonarCloud, ESLint | CI pipeline |
 | **Security (DAST)** | OWASP ZAP | OWASP ZAP | `docker run zaproxy/zap-stable ...` |
 | **Security (SCA)** | Trivy, OWASP Dep-Check, Snyk | npm audit, Snyk | CI pipeline |
 | **Security (IaC)** | Checkov, Snyk IaC | - | `checkov -d infra/terraform/` |
@@ -264,6 +264,11 @@ mini-aliexpress/
 │   ├── Infra (Docker Compose).run.xml
 │   └── Backend Tests.run.xml
 │
+├── .github/
+│   └── workflows/
+│       └── ci.yml                        # GitHub Actions CI (build, test, SonarCloud)
+│
+├── sonar-project.properties              # SonarCloud monorepo config (backend + frontend modules)
 ├── Makefile                              # Project orchestration (make all / stop / test)
 ├── TODO.md                               # Project checklist
 ├── CONTRIBUTING.md                       # Gitflow, commit conventions, PR process

@@ -65,7 +65,7 @@ Multi-layer security scanning to detect vulnerabilities across code, dependencie
 | **Checkmarx (SAST)**       | Static Application Security Testing         | Source code for injection flaws, XSS, insecure patterns  |
 | **OWASP ZAP**              | Dynamic Application Security Testing (DAST) | Running application for OWASP Top 10 vulnerabilities     |
 | **OWASP Dependency-Check** | Software Composition Analysis (SCA)         | Maven & npm dependencies for known CVEs                  |
-| **SonarQube**              | Code quality & security                     | Bugs, code smells, security hotspots, coverage           |
+| **SonarCloud**             | Code quality & security (hosted)            | Bugs, code smells, security hotspots, coverage           |
 | **Snyk**                   | Open source vulnerability scanner           | Dependencies, container images, IaC (Terraform)          |
 | **Checkov**                | Infrastructure as Code security             | Terraform misconfigurations, compliance violations       |
 
@@ -89,11 +89,9 @@ npm audit
 docker run --rm -t zaproxy/zap-stable zap-baseline.py \
   -t http://localhost:8080 -r zap-report.html
 
-# SonarQube analysis
-cd backend
-./mvnw sonar:sonar \
-  -Dsonar.host.url=http://localhost:9000 \
-  -Dsonar.token=<SONAR_TOKEN>
+# SonarCloud analysis (runs automatically in CI via GitHub Actions)
+# Manual trigger: uses sonar-project.properties at repo root
+# See .github/workflows/ci.yml for the full pipeline
 
 # Checkov (Terraform IaC)
 checkov -d infra/terraform/
@@ -108,5 +106,5 @@ snyk iac test infra/terraform/
 
 ```bash
 make security-scan        # Run OWASP + Trivy scans
-make sonar                # Run SonarQube analysis
+make sonar                # Run SonarCloud analysis
 ```
