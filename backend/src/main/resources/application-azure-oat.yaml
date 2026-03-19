@@ -1,6 +1,11 @@
 # ============================================================
-# Profile: azure-services (Azure PaaS — no Kubernetes)
+# Profile: azure-oat (OAT — Operational Acceptance Testing Azure AKS)
 # ============================================================
+# Infrastructure: Terraform + Helm
+# Services: AKS, Azure Database for PostgreSQL, Azure Event Hubs,
+#           Azure Blob Storage, Azure Key Vault, Keycloak on Azure VM.
+# Secrets mounted from Azure Key Vault via CSI driver → K8s Secrets.
+# Same stack as PRD but with more verbose logging for operational validation.
 
 spring:
   # ── DataSource (Azure Database for PostgreSQL) ─
@@ -44,3 +49,23 @@ azure:
     container:
       product-images: product-images
       user-avatars: user-avatars
+
+# ── Actuator (health probes for K8s) ─────────
+management:
+  endpoint:
+    health:
+      show-details: when_authorized
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+
+# ── Logging (verbose for operational validation) ─
+logging:
+  level:
+    ma.mohammedjabrane: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: INFO

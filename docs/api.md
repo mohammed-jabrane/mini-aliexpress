@@ -16,12 +16,14 @@ The API is documented using **SpringDoc OpenAPI** annotations on controllers.
 
 ## Base URL
 
-| Profile                | Base URL                                      |
-|------------------------|-----------------------------------------------|
-| Local (Docker Compose) | `http://localhost:8080/api`                   |
-| Local Kubernetes       | `http://mini-aliexpress.local/api`            |
-| Azure AKS              | `https://<aks-ingress>/api`                   |
-| Azure PaaS             | `https://<app-service>.azurewebsites.net/api` |
+| Env   | Profile        | Base URL                                              |
+|-------|----------------|-------------------------------------------------------|
+| LOCAL | `local-docker` | `http://localhost:8080/api`                           |
+| LOCAL | `local-k8s`    | `http://mini-aliexpress.local/api`                    |
+| INT   | `azure-int`    | `http://<vm-public-ip>:8080/api`                      |
+| UAT   | `azure-uat`    | `https://<app-service>.azurewebsites.net/api`         |
+| OAT   | `azure-oat`    | `https://oat.<domain>/api`                            |
+| PRD   | `azure-prd`    | `https://<domain>/api`                                |
 
 ---
 

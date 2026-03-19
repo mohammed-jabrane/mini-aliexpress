@@ -18,6 +18,7 @@
 .PHONY: frontend-install frontend-run frontend-test frontend-build frontend-clean
 .PHONY: test-unit test-integration test-cucumber test-performance
 .PHONY: security-scan docker-build
+.PHONY: deploy-int deploy-uat deploy-oat deploy-prd
 
 DOCKER_COMPOSE = docker compose -f infra/docker/local/docker-compose.yml --env-file infra/docker/local/.env
 MVN = cd backend && ./mvnw
@@ -194,6 +195,38 @@ docker-build:
 	docker build -t mini-aliexpress-frontend:latest frontend/
 
 # ==============================================================
+# Deployment (Cloud Environments)
+# ==============================================================
+
+## Deploy to INT (Packer + Terraform + Ansible)
+deploy-int: docker-build
+	@echo "$(CYAN)Deploying to INT (azure-int)...$(RESET)"
+	cd infra/packer && packer init . && packer build -var-file=variables.pkrvars.hcl .
+	cd infra/terraform/environments/azure-int && terraform init && terraform apply -auto-approve
+	cd infra/ansible && ansible-playbook -i inventory/azure-int playbooks/deploy.yml
+	@echo "$(GREEN)INT deployment complete.$(RESET)"
+
+## Deploy to UAT (Terraform Azure PaaS)
+deploy-uat: docker-build
+	@echo "$(CYAN)Deploying to UAT (azure-uat)...$(RESET)"
+	cd infra/terraform/environments/azure-uat && terraform init && terraform apply -auto-approve
+	@echo "$(GREEN)UAT deployment complete.$(RESET)"
+
+## Deploy to OAT (Terraform + Helm AKS)
+deploy-oat: docker-build
+	@echo "$(CYAN)Deploying to OAT (azure-oat)...$(RESET)"
+	cd infra/terraform/environments/azure-oat && terraform init && terraform apply -auto-approve
+	cd infra/k8s/azure-aks/scripts && ENVIRONMENT=oat ./deploy-aks.sh
+	@echo "$(GREEN)OAT deployment complete.$(RESET)"
+
+## Deploy to PRD (Terraform + Helm AKS)
+deploy-prd: docker-build
+	@echo "$(CYAN)Deploying to PRD (azure-prd)...$(RESET)"
+	cd infra/terraform/environments/azure-prd && terraform init && terraform apply -auto-approve
+	cd infra/k8s/azure-aks/scripts && ENVIRONMENT=prd ./deploy-aks.sh
+	@echo "$(GREEN)PRD deployment complete.$(RESET)"
+
+# ==============================================================
 # Help
 # ==============================================================
 
@@ -240,4 +273,10 @@ help:
 	@echo ""
 	@echo "  $(GREEN)Docker$(RESET)"
 	@echo "    make docker-build         Build backend + frontend Docker images"
+	@echo ""
+	@echo "  $(GREEN)Deployment (Cloud)$(RESET)"
+	@echo "    make deploy-int           Deploy to INT  (Packer + Terraform + Ansible)"
+	@echo "    make deploy-uat           Deploy to UAT  (Terraform Azure PaaS)"
+	@echo "    make deploy-oat           Deploy to OAT  (Terraform + Helm AKS)"
+	@echo "    make deploy-prd           Deploy to PRD  (Terraform + Helm AKS)"
 	@echo ""

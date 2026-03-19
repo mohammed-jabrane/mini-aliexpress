@@ -7,7 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.2.0] - Admin Feature (Dashboard, User & Category Management)
+## [5.0.0] — Planned — PRD (`azure-prd`)
+
+### Added
+- Terraform for AKS, Azure Vault, Azure managed services (production)
+- Helm charts for Kubernetes deployment
+- Production monitoring and alerting
+
+## [4.0.0] — Planned — OAT (`azure-prd`)
+
+### Added
+- Terraform for AKS, Azure Vault, Azure managed services (pre-production)
+- Helm charts for Kubernetes deployment
+- Operational acceptance testing environment
+
+## [3.0.0] — Planned — UAT (`azure-uat`)
+
+### Added
+- Terraform for Azure PaaS resources (Azure PostgreSQL, Azure Event Hubs, Azure Vault)
+- User acceptance testing environment
+- Payment with card
+- Multilanguage platform
+
+## [2.3.0] — Planned — INT (`azure-int`)
+
+### Added
+- Packer for create image for VM azure (Profile azure-int)
+- Terraform for create ressources and configurations
+- Ansible for install docker & services in image with configuration
+- GitHub Actions Pipeline for execute création service
+- GitHub Actions Pipeline for deploy in azure-int
+
+## [2.2.0] - Admin Feature, Lazy Routes, GitHub Actions CI & GitHub Flow
 
 ### Added
 - Admin dashboard with platform metrics (Products, Categories, Orders, Users counts)
@@ -23,35 +54,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `authGuard` + `roleGuard` on `/seller` (`ROLE_SELLER`) and `/admin` (`ROLE_ADMIN`)
 - Placeholder page components: `CartPageComponent`, `OrderHistoryComponent`, `ProfileComponent`, `ProductManagementComponent`
 - Feature route files: `cart.routes.ts`, `order.routes.ts`, `user.routes.ts`, `seller.routes.ts`
-
-### Changed
-- `HeaderComponent.isAdmin` refactored from plain boolean to `computed` signal derived from `AuthKeycloakService.currentRoles`
-- `AuthKeycloakService` now merges roles from both `getUserRoles()` and `tokenParsed.realm_access.roles`
-
-## [5.0.0] — Planned
-
-### Added
-- Migration to AWS
-
-## [4.0.0] — Planned
-
-### Added
-- Payment with card
-
-## [3.0.0] — Planned
-
-### Added
-- Multilanguage platform
-
-## [2.3.0] — Planned
-
-### Added
-- Azure PaaS (no Kubernetes) Terraform deployment profile
-- Terraform modules: AKS, PostgreSQL, Blob Storage, Event Hubs, Keycloak VM, Networking, Container Registry
-
-## [2.2.0] - GitHub Actions CI, SonarCloud & GitHub Flow
-
-### Added
 - GitHub Actions CI workflow (`.github/workflows/ci.yml`) — required quality gate before merge
 - Backend: build, unit tests, JaCoCo coverage report
 - JaCoCo Maven plugin (`jacoco-maven-plugin` 0.8.12) — generates XML/HTML coverage on `mvn verify`
@@ -62,6 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Recommended branch protection rules in `CONTRIBUTING.md`
 
 ### Changed
+- `HeaderComponent.isAdmin` refactored from plain boolean to `computed` signal derived from `AuthKeycloakService.currentRoles`
+- `AuthKeycloakService` now merges roles from both `getUserRoles()` and `tokenParsed.realm_access.roles`
 - Branching strategy: **Gitflow** → **GitHub Flow** (all branches from/to `main`, no `develop`)
 - CI triggers: only `main` branch (pull requests + pushes)
 - Merge strategy: squash merge for clean `main` history

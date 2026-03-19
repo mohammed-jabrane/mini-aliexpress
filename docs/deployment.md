@@ -2,33 +2,49 @@
 
 > Back to [README](../README.md)
 
-## Deployment Profiles
+## Environments & Profiles
 
-The project supports **4 deployment profiles**, each with its own infrastructure setup:
+The project supports **5 environments** with dedicated infrastructure profiles:
 
-| # | Profile            | Description                         | Infra Tool       |
-|---|--------------------|-------------------------------------|------------------|
-| 1 | **local**          | Docker Compose on your machine      | Docker Compose   |
-| 2 | **local-k8s**      | Minikube cluster with Helm charts   | Helm + Minikube  |
-| 3 | **azure-aks**      | Full AKS cluster on Azure           | Terraform + Helm |
-| 4 | **azure-services** | Azure PaaS services (no Kubernetes) | Terraform        |
+| Env   | Profile          | Description                                  | Infra Tools                                   |
+|-------|------------------|----------------------------------------------|-----------------------------------------------|
+| LOCAL | `local-docker`   | Docker Compose on your machine               | Docker Compose                                |
+| LOCAL | `local-k8s`      | Minikube cluster with Helm charts            | Helm + Minikube                               |
+| INT   | `azure-int`      | Integration — Azure VM with Docker           | Packer, Terraform, Ansible, Docker Compose    |
+| UAT   | `azure-uat`      | User Acceptance Testing — Azure PaaS         | Terraform, Azure Vault, Azure PaaS            |
+| OAT   | `azure-oat`      | Operational Acceptance Testing — Azure AKS   | Terraform, Helm, AKS, Azure Vault             |
+| PRD   | `azure-prd`      | Production — Azure AKS                       | Terraform, Helm, AKS, Azure Vault             |
 
-### Service Mapping Across Profiles
+### Environment Purpose
 
-| Service            | local                   | local-k8s         | azure-aks         | azure-services                |
-|--------------------|-------------------------|-------------------|-------------------|-------------------------------|
-| Database           | PostgreSQL (container)  | PostgreSQL (Helm) | PostgreSQL (Helm) | Azure Database for PostgreSQL |
-| Messaging          | Kafka + Schema Registry | Kafka (Helm)      | Kafka (Helm)      | Azure Event Hubs              |
-| Object Storage     | Minio S3                | Minio (Helm)      | Minio (Helm)      | Azure Blob Storage            |
-| Identity           | Keycloak (container)    | Keycloak (Helm)   | Keycloak (Helm)   | Keycloak (Azure VM)           |
-| Backend            | Spring Boot (local JVM) | K8s Deployment    | K8s Deployment    | Azure App Service             |
-| Frontend           | Angular dev server      | K8s Deployment    | K8s Deployment    | Azure Static Web App          |
-| Container Registry | -                       | Minikube local    | Azure ACR         | Azure ACR                     |
-| Ingress            | -                       | NGINX Ingress     | NGINX Ingress     | Azure managed                 |
+| Env   | Purpose                                                                |
+|-------|------------------------------------------------------------------------|
+| LOCAL | Developer workstation — fast feedback loop, hot-reload, debugging      |
+| INT   | First cloud env — validate Docker images on a real Azure VM            |
+| UAT   | Business validation — Azure managed services, close to production      |
+| OAT   | Pre-production — full AKS cluster, performance & operational testing   |
+| PRD   | Production — same AKS stack as OAT, real users                        |
+
+### Service Mapping Across Environments
+
+| Service            | LOCAL (docker)          | LOCAL (k8s)       | INT (azure-int)              | UAT (azure-uat)                | OAT (azure-oat)              | PRD (azure-prd)               |
+|--------------------|-------------------------|-------------------|------------------------------|--------------------------------|-------------------------------|-------------------------------|
+| Database           | PostgreSQL (container)  | PostgreSQL (Helm) | PostgreSQL (Docker)          | Azure Database for PostgreSQL  | Azure Database for PostgreSQL | Azure Database for PostgreSQL |
+| Messaging          | Kafka + Schema Registry | Kafka (Helm)      | Kafka (Docker)               | Azure Event Hubs               | Azure Event Hubs              | Azure Event Hubs              |
+| Object Storage     | Minio S3                | Minio (Helm)      | Minio (Docker)               | Azure Blob Storage             | Azure Blob Storage            | Azure Blob Storage            |
+| Identity           | Keycloak (container)    | Keycloak (Helm)   | Keycloak (Docker)            | Keycloak (Azure VM)            | Keycloak (Azure VM)           | Keycloak (Azure VM)           |
+| Backend            | Spring Boot (local JVM) | K8s Deployment    | Docker container (VM)        | Azure App Service              | K8s Deployment (AKS)          | K8s Deployment (AKS)          |
+| Frontend           | Angular dev server      | K8s Deployment    | Docker container (VM)        | Azure Static Web App           | K8s Deployment (AKS)          | K8s Deployment (AKS)          |
+| Container Registry | —                       | Minikube local    | Azure ACR                    | Azure ACR                      | Azure ACR                     | Azure ACR                     |
+| Ingress            | —                       | NGINX Ingress     | Nginx (VM)                   | Azure managed                  | NGINX Ingress (AKS)           | NGINX Ingress (AKS)           |
+| Secrets            | `.env` file             | K8s Secrets       | Ansible Vault                | Azure Key Vault                | Azure Key Vault               | Azure Key Vault               |
+| IaC                | Docker Compose          | Helm              | Packer + Terraform + Ansible | Terraform                      | Terraform + Helm              | Terraform + Helm              |
 
 ---
 
 ## Prerequisites
+
+### Common (all environments)
 
 - **Java** 17+ (managed via [jenv](https://www.jenv.be/) — `.java-version` pinned at project root)
 - **Node.js** 22+ and **npm** (managed via [nvm](https://github.com/nvm-sh/nvm) — `.nvmrc` pinned at project root)
@@ -46,13 +62,16 @@ jenv local          # should show 17.0
 nvm use             # switches to v22
 ```
 
-Additional for specific profiles:
+### Per-Environment Prerequisites
 
-| Profile        | Extra prerequisites                          |
-|----------------|----------------------------------------------|
-| local-k8s      | Minikube, kubectl, Helm 3                    |
-| azure-aks      | Azure CLI, Terraform >= 1.5, kubectl, Helm 3 |
-| azure-services | Azure CLI, Terraform >= 1.5                  |
+| Profile        | Extra prerequisites                                      |
+|----------------|----------------------------------------------------------|
+| `local-docker` | —                                                        |
+| `local-k8s`    | Minikube, kubectl, Helm 3                                |
+| `azure-int`    | Azure CLI, Terraform >= 1.5, Packer, Ansible             |
+| `azure-uat`    | Azure CLI, Terraform >= 1.5                              |
+| `azure-oat`    | Azure CLI, Terraform >= 1.5, kubectl, Helm 3             |
+| `azure-prd`    | Azure CLI, Terraform >= 1.5, kubectl, Helm 3             |
 
 ---
 
@@ -61,9 +80,9 @@ Additional for specific profiles:
 ### Option A — One Command (Makefile)
 
 ```bash
-make all          # Start infra + backend + frontend
-make stop         # Stop everything
-make help         # Show all available targets
+make all              # Start local infra + backend + frontend
+make stop             # Stop everything
+make help             # Show all available targets
 ```
 
 ### Option B — IntelliJ IDEA (with debug)
@@ -83,7 +102,7 @@ To **debug the backend**: select `Backend (Local)` and click the **Debug** butto
 
 ### Option C — Manual (Step by Step)
 
-#### Profile 1 — Local (Docker Compose)
+#### LOCAL — Docker Compose (`local-docker`)
 
 ```bash
 # 1. Start all infrastructure services
@@ -101,17 +120,17 @@ npm install && ng serve
 
 | Service         | URL                                       | Credentials                        |
 |-----------------|-------------------------------------------|------------------------------------|
-| Backend API     | http://localhost:8080/api                 | -                                  |
-| Swagger UI      | http://localhost:8080/api/swagger-ui.html | -                                  |
-| Frontend        | http://localhost:4200                     | -                                  |
+| Backend API     | http://localhost:8080/api                 | —                                  |
+| Swagger UI      | http://localhost:8080/api/swagger-ui.html | —                                  |
+| Frontend        | http://localhost:4200                     | —                                  |
 | PostgreSQL      | localhost:5432                            | `aliexpress` / `aliexpress_secret` |
-| Kafka           | localhost:9092                            | -                                  |
-| Schema Registry | http://localhost:8081                     | -                                  |
-| Kafka UI        | http://localhost:9090                     | -                                  |
+| Kafka           | localhost:9092                            | —                                  |
+| Schema Registry | http://localhost:8081                     | —                                  |
+| Kafka UI        | http://localhost:9090                     | —                                  |
 | Minio Console   | http://localhost:9001                     | `minioadmin` / `minioadmin`        |
 | Keycloak Admin  | http://localhost:8180                     | `admin` / `admin`                  |
 
-#### Profile 2 — Local Kubernetes (Minikube)
+#### LOCAL — Kubernetes (`local-k8s`)
 
 ```bash
 # One-command bootstrap
@@ -125,41 +144,91 @@ chmod +x setup-minikube.sh
 
 Then open http://mini-aliexpress.local
 
-#### Profile 3 — Azure AKS
+#### INT — Azure VM (`azure-int`)
 
 ```bash
-# 1. Provision AKS cluster with Terraform
-cd infra/terraform/environments/azure-aks
-cp terraform.tfvars terraform.tfvars.local   # edit with your values
+# 1. Build VM image with Packer
+cd infra/packer
+packer init .
+packer build -var-file=variables.pkrvars.hcl .
+
+# 2. Provision Azure resources with Terraform
+cd infra/terraform/environments/azure-int
+cp terraform.tfvars.example terraform.tfvars   # edit with your values
 terraform init && terraform plan && terraform apply
 
-# 2. Deploy workloads with Helm
-cd infra/k8s/azure-aks/scripts
-chmod +x deploy-aks.sh
-export RESOURCE_GROUP="mini-aliexpress-aks-rg"
-export AKS_CLUSTER="mini-aliexpress-aks"
-export ACR_NAME="minialiexpressacr"
-./deploy-aks.sh
+# 3. Configure VM with Ansible
+cd infra/ansible
+ansible-playbook -i inventory/azure-int playbooks/deploy.yml
 ```
 
-#### Profile 4 — Azure Services (PaaS, no Kubernetes)
+#### UAT — Azure PaaS (`azure-uat`)
 
 ```bash
-# Provision everything with Terraform
-cd infra/terraform/environments/azure-services
-cp terraform.tfvars terraform.tfvars.local   # edit with your values
+# Provision Azure managed services with Terraform
+cd infra/terraform/environments/azure-uat
+cp terraform.tfvars.example terraform.tfvars   # edit with your values
 terraform init && terraform plan && terraform apply
 
 # Outputs will show all service URLs
 terraform output
 ```
 
+#### OAT — Azure AKS (`azure-oat`)
+
+```bash
+# 1. Provision AKS cluster + Azure services with Terraform
+cd infra/terraform/environments/azure-oat
+cp terraform.tfvars.example terraform.tfvars   # edit with your values
+terraform init && terraform plan && terraform apply
+
+# 2. Deploy workloads with Helm
+cd infra/k8s/azure-aks/scripts
+chmod +x deploy-aks.sh
+export RESOURCE_GROUP="mini-aliexpress-oat-rg"
+export AKS_CLUSTER="mini-aliexpress-oat-aks"
+export ACR_NAME="minialiexpressacr"
+export ENVIRONMENT="oat"
+./deploy-aks.sh
+```
+
+#### PRD — Azure AKS (`azure-prd`)
+
+```bash
+# 1. Provision AKS cluster + Azure services with Terraform
+cd infra/terraform/environments/azure-prd
+cp terraform.tfvars.example terraform.tfvars   # edit with your values
+terraform init && terraform plan && terraform apply
+
+# 2. Deploy workloads with Helm
+cd infra/k8s/azure-aks/scripts
+chmod +x deploy-aks.sh
+export RESOURCE_GROUP="mini-aliexpress-prd-rg"
+export AKS_CLUSTER="mini-aliexpress-prd-aks"
+export ACR_NAME="minialiexpressacr"
+export ENVIRONMENT="prd"
+./deploy-aks.sh
+```
+
+---
+
+## CI/CD Pipeline per Environment
+
+| Env   | Trigger                        | Pipeline Steps                                              |
+|-------|--------------------------------|-------------------------------------------------------------|
+| LOCAL | Developer runs `make all`      | Docker Compose up, backend run, frontend serve              |
+| INT   | Push to `main` (CI passes)     | Packer build, Terraform apply, Ansible deploy               |
+| UAT   | Manual approval / tag          | Terraform apply (Azure PaaS), deploy app                    |
+| OAT   | Release candidate tag          | Terraform apply (AKS oat), Helm upgrade                     |
+| PRD   | Manual approval after OAT      | Terraform apply (AKS prd), Helm upgrade                     |
+
 ---
 
 ## Makefile Reference
 
 ```bash
-make all                  # Start infra + backend + frontend
+# ── Local Development ──
+make all                  # Start infra + backend + frontend (local-docker)
 make stop                 # Stop everything
 make clean                # Stop + remove volumes + clean builds
 
@@ -177,13 +246,22 @@ make frontend-install     # Install npm dependencies
 make frontend-build       # Build for production
 make frontend-test        # Run frontend unit tests
 
+# ── Testing ──
 make test                 # Run all unit tests (backend + frontend)
 make test-integration     # Run Testcontainers integration tests
 make test-cucumber        # Run Cucumber BDD tests
 make test-performance     # Run Gatling performance tests
 make test-mutation        # Run PITest mutation tests
 
+# ── Security & Quality ──
 make security-scan        # Run OWASP + Trivy scans
 make sonar                # Run SonarQube analysis
+
+# ── Docker & Deployment ──
 make docker-build         # Build backend + frontend Docker images
+
+make deploy-int           # Deploy to INT  (Packer + Terraform + Ansible)
+make deploy-uat           # Deploy to UAT  (Terraform Azure PaaS)
+make deploy-oat           # Deploy to OAT  (Terraform + Helm AKS, verbose logging)
+make deploy-prd           # Deploy to PRD  (Terraform + Helm AKS, production)
 ```

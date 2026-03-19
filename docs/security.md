@@ -4,7 +4,7 @@
 
 ## OAuth2 / OpenID Connect — Keycloak
 
-The project uses **Keycloak** for identity and access management across all deployment profiles.
+The project uses **Keycloak** for identity and access management across all environments (LOCAL, INT, UAT, OAT, PRD).
 
 ### Realm Configuration
 
@@ -29,10 +29,31 @@ The realm is auto-imported from [
 
 ### Clients
 
-| Client ID                  | Type         | Flow                                               | Redirect URIs             |
-|----------------------------|--------------|----------------------------------------------------|---------------------------|
-| `mini-aliexpress-backend`  | Confidential | Authorization Code, Direct Access, Service Account | `http://localhost:8080/*` |
-| `mini-aliexpress-frontend` | Public       | Authorization Code + PKCE, Direct Access           | `http://localhost:4200/*` |
+| Client ID                  | Type         | Flow                                               |
+|----------------------------|--------------|----------------------------------------------------|
+| `mini-aliexpress-backend`  | Confidential | Authorization Code, Direct Access, Service Account |
+| `mini-aliexpress-frontend` | Public       | Authorization Code + PKCE, Direct Access           |
+
+### Redirect URIs per Environment
+
+| Env   | Backend Redirect URIs                              | Frontend Redirect URIs                             |
+|-------|----------------------------------------------------|----------------------------------------------------|
+| LOCAL | `http://localhost:8080/*`                          | `http://localhost:4200/*`                          |
+| LOCAL | `http://mini-aliexpress.local/*`                   | `http://mini-aliexpress.local/*`                   |
+| INT   | `http://<vm-ip>:8080/*`                            | `http://<vm-ip>/*`                                 |
+| UAT   | `https://<app-service>.azurewebsites.net/*`        | `https://<static-web-app>.azurestaticapps.net/*`   |
+| OAT   | `https://oat.<domain>/*`                           | `https://oat.<domain>/*`                           |
+| PRD   | `https://<domain>/*`                               | `https://<domain>/*`                               |
+
+### Secrets Management
+
+| Env   | Method                     | Details                                        |
+|-------|----------------------------|------------------------------------------------|
+| LOCAL | `.env` file                | Plaintext, gitignored                          |
+| INT   | Ansible Vault              | Encrypted vars in Ansible playbooks            |
+| UAT   | Azure Key Vault            | Managed secrets, referenced by Terraform       |
+| OAT   | Azure Key Vault            | Managed secrets, mounted in K8s pods           |
+| PRD   | Azure Key Vault            | Managed secrets, mounted in K8s pods           |
 
 ### Test Users
 

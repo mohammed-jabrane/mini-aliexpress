@@ -151,6 +151,19 @@ src/app/
 
 ### Infrastructure as Code
 
-- **Terraform modules** are reusable across profiles — DRY principle
-- **Helm charts** are parameterized per environment (local vs. AKS)
+The project follows a **progressive infrastructure** strategy across 5 environments:
+
+| Env   | Profile      | IaC Tools                              | Description                           |
+|-------|--------------|----------------------------------------|---------------------------------------|
+| LOCAL | `local-docker` / `local-k8s` | Docker Compose / Helm + Minikube | Developer workstation         |
+| INT   | `azure-int`  | Packer + Terraform + Ansible           | Azure VM with Docker Compose          |
+| UAT   | `azure-uat`  | Terraform                              | Azure PaaS (PostgreSQL, Event Hubs, Key Vault) |
+| OAT   | `azure-oat`  | Terraform + Helm                       | Azure AKS (pre-production, verbose logging) |
+| PRD   | `azure-prd`  | Terraform + Helm                       | Azure AKS (production)                |
+
+- **Terraform modules** are reusable across environments — DRY principle
+- **Packer** builds immutable VM images for INT
+- **Ansible** handles configuration management and service deployment on INT VMs
+- **Helm charts** are parameterized per environment (local Minikube vs. AKS)
+- **Azure Key Vault** manages secrets in UAT, OAT, and PRD
 - **Docker Compose** provides the simplest local development experience

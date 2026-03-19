@@ -55,17 +55,19 @@ A full-stack e-commerce platform inspired by AliExpress, built as a mini project
 
 ### Infrastructure & DevOps
 
-| Technology | Purpose |
-|---|---|
-| Docker / Docker Compose | Local container orchestration |
-| Kubernetes / Helm | Container orchestration (Minikube & AKS) |
-| Terraform | Infrastructure as Code (Azure) |
-| Minikube | Local Kubernetes cluster |
-| Azure AKS | Managed Kubernetes on Azure |
-| Azure PaaS | Blob Storage, Event Hubs, Flexible Server, App Service |
-| Maven | Backend build & dependency management |
-| Angular CLI | Frontend build tooling |
-| Make | Project orchestration (Makefile) |
+| Technology | Purpose | Environments |
+|---|---|---|
+| Docker / Docker Compose | Container orchestration | LOCAL, INT |
+| Kubernetes / Helm | Container orchestration | LOCAL (Minikube), OAT, PRD (AKS) |
+| Terraform | Infrastructure as Code | INT, UAT, OAT, PRD |
+| Packer | VM image building | INT |
+| Ansible | Configuration management | INT |
+| Azure AKS | Managed Kubernetes | OAT, PRD |
+| Azure PaaS | Blob Storage, Event Hubs, PostgreSQL, Key Vault | UAT, OAT, PRD |
+| Azure Key Vault | Secrets management | UAT, OAT, PRD |
+| Maven | Backend build & dependency management | All |
+| Angular CLI | Frontend build tooling | All |
+| Make | Project orchestration (Makefile) | All |
 
 ---
 
@@ -179,15 +181,28 @@ For detailed testing instructions see [backend/README.md](backend/README.md) and
 
 ---
 
+## Environments
+
+| Env   | Profile        | Stack                                       | Purpose                          |
+|-------|----------------|---------------------------------------------|----------------------------------|
+| LOCAL | `local-docker` | Docker Compose                              | Developer workstation            |
+| LOCAL | `local-k8s`    | Helm + Minikube                             | Local Kubernetes testing         |
+| INT   | `azure-int`    | Packer + Terraform + Ansible + Azure VM     | Integration testing              |
+| UAT   | `azure-uat`    | Terraform + Azure PaaS + Key Vault          | User acceptance testing          |
+| OAT   | `azure-oat`    | Terraform + Helm + AKS + Key Vault          | Operational acceptance testing   |
+| PRD   | `azure-prd`    | Terraform + Helm + AKS + Key Vault          | Production                       |
+
+For full setup instructions, see [docs/deployment.md](docs/deployment.md).
+
+---
+
 ## Quick Start
 
 ```bash
-make all          # Start infra + backend + frontend
+make all          # Start infra + backend + frontend (local-docker)
 make stop         # Stop everything
 make help         # Show all available targets
 ```
-
-For full setup instructions (4 deployment profiles, IntelliJ config, manual steps), see [docs/deployment.md](docs/deployment.md).
 
 ---
 
@@ -200,10 +215,12 @@ mini-aliexpress/
 │   ├── src/main/java/                    #   Application source code
 │   ├── src/main/resources/
 │   │   ├── application.yaml              #   Shared config (server, JPA, Liquibase, OpenAPI)
-│   │   ├── application-local.yaml        #   Profile: local Docker Compose
-│   │   ├── application-local-k8s.yaml    #   Profile: Minikube
-│   │   ├── application-azure-aks.yaml    #   Profile: Azure AKS
-│   │   ├── application-azure-services.yaml #  Profile: Azure PaaS
+│   │   ├── application-local.yaml        #   Profile: LOCAL (Docker Compose)
+│   │   ├── application-local-k8s.yaml    #   Profile: LOCAL (Minikube)
+│   │   ├── application-azure-int.yaml    #   Profile: INT (Azure VM)
+│   │   ├── application-azure-uat.yaml    #   Profile: UAT (Azure PaaS)
+│   │   ├── application-azure-oat.yaml    #   Profile: OAT (Azure AKS, verbose logging)
+│   │   ├── application-azure-prd.yaml    #   Profile: PRD (Azure AKS, production)
 │   │   └── db/changelog/                 #   Liquibase migrations
 │   ├── src/test/                         #   Tests (JUnit, Testcontainers, Cucumber)
 │   ├── Dockerfile                        #   Multi-stage build (Maven + JRE Alpine)
@@ -228,19 +245,26 @@ mini-aliexpress/
 │
 ├── infra/                                # Infrastructure as Code
 │   ├── docker/
-│   │   └── local/                        #   Profile 1: Docker Compose
+│   │   └── local/                        #   LOCAL: Docker Compose
 │   │       ├── docker-compose.yml
 │   │       ├── .env
 │   │       └── config/
 │   │           ├── keycloak/             #     Realm export (auto-import)
 │   │           └── postgres/             #     Init scripts
 │   │
+│   ├── packer/                           #   INT: VM image building
+│   │   └── *.pkr.hcl                    #     Packer templates for Azure VM
+│   │
+│   ├── ansible/                          #   INT: Configuration management
+│   │   ├── playbooks/                    #     Deployment playbooks
+│   │   └── inventory/                    #     Environment inventories
+│   │
 │   ├── k8s/
-│   │   ├── local/                        #   Profile 2: Minikube
+│   │   ├── local/                        #   LOCAL: Minikube
 │   │   │   ├── helm/mini-aliexpress/     #     Helm chart + Bitnami deps
 │   │   │   └── scripts/                  #     setup-minikube.sh
 │   │   │
-│   │   └── azure-aks/                    #   Profile 3: AKS
+│   │   └── azure-aks/                    #   OAT/PRD: AKS
 │   │       ├── helm/mini-aliexpress/     #     Helm chart (prod values, HPA)
 │   │       └── scripts/                  #     deploy-aks.sh
 │   │
@@ -255,8 +279,9 @@ mini-aliexpress/
 │       │   └── container-registry/       #     Azure Container Registry
 │       │
 │       └── environments/
-│           ├── azure-aks/                #   Profile 3: Terraform for AKS infra
-│           └── azure-services/           #   Profile 4: Terraform for PaaS infra
+│           ├── azure-int/                #   INT: Terraform for Azure VM infra
+│           ├── azure-uat/                #   UAT: Terraform for Azure PaaS infra
+│           └── azure-prd/                #   OAT/PRD: Terraform for AKS infra
 │
 ├── docs/                                 # Documentation
 │   ├── architecture.md                   #   Architecture details & key concepts
@@ -298,7 +323,7 @@ mini-aliexpress/
 | Document | Description |
 |----------|-------------|
 | [docs/architecture.md](docs/architecture.md) | Hexagonal & Angular architecture, diagrams, key concepts |
-| [docs/deployment.md](docs/deployment.md) | 4 deployment profiles, prerequisites, Makefile reference |
+| [docs/deployment.md](docs/deployment.md) | 5 environments (LOCAL, INT, UAT, OAT, PRD), prerequisites, Makefile reference |
 | [docs/api.md](docs/api.md) | REST API endpoints, auth, response formats |
 | [docs/security.md](docs/security.md) | OAuth2/Keycloak configuration, security testing tools |
 | [docs/adr/](docs/adr/README.md) | Architecture Decision Records |
