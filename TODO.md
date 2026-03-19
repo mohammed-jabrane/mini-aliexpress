@@ -274,10 +274,10 @@
 
 ### NgRx Store (FA14)
 
-- [ ] Create `store/product/` (actions, reducer, effects, selectors)
-- [ ] Create `store/cart/` (actions, reducer, effects, selectors)
-- [ ] Create `store/order/` (actions, reducer, effects, selectors)
-- [ ] Create `store/auth/` (actions, reducer, selectors)
+- [x] Create `store/product/` (actions, reducer, effects, selectors)
+- [x] Create `store/cart/` (actions, reducer, effects, selectors)
+- [x] Create `store/order/` (actions, reducer, effects, selectors)
+- [x] Create `store/auth/` (actions, reducer, selectors)
 
 ### Routing (app.routes.ts) (FA13)
 
@@ -373,9 +373,9 @@
 - [ ] Test `ProductService` (HTTP calls via `HttpClientTestingModule`)
 - [ ] Test `CartService`
 - [ ] Test `OrderService`
-- [ ] Test NgRx reducers (state transitions)
-- [ ] Test NgRx effects (`provideMockActions`, marbles)
-- [ ] Test NgRx selectors (projector)
+- [x] Test NgRx reducers (state transitions)
+- [x] Test NgRx effects (`provideMockActions`, marbles)
+- [x] Test NgRx selectors (projector)
 - [ ] Test mappers (`product.mapper.ts`, `cart.mapper.ts`, `order.mapper.ts`)
 - [ ] Test `CurrencyFormatPipe`
 - [ ] Test `AuthGuard` / `RoleGuard`
