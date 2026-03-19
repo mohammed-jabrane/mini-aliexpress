@@ -10,17 +10,19 @@ describe('AuthKeycloakService', () => {
   beforeEach(() => {
     keycloakSpy = jasmine.createSpyObj('KeycloakService', [
       'isLoggedIn',
-      'getUsername',
       'getUserRoles',
       'isUserInRole',
       'login',
       'logout',
       'getToken',
+      'getKeycloakInstance',
       'loadUserProfile',
     ]);
     keycloakSpy.isLoggedIn.and.returnValue(true);
-    keycloakSpy.getUsername.and.returnValue('testuser');
     keycloakSpy.getUserRoles.and.returnValue(['ROLE_USER']);
+    keycloakSpy.getKeycloakInstance.and.returnValue({
+      tokenParsed: { preferred_username: 'testuser', email: 'test@example.com' },
+    } as any);
 
     TestBed.configureTestingModule({
       providers: [
@@ -36,7 +38,7 @@ describe('AuthKeycloakService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should initialize signals from KeycloakService', () => {
+  it('should initialize all signals synchronously from token', () => {
     expect(service.isAuthenticated()).toBeTrue();
     expect(service.currentUsername()).toBe('testuser');
     expect(service.currentRoles()).toEqual(['ROLE_USER']);
@@ -47,7 +49,7 @@ describe('AuthKeycloakService', () => {
     expect(keycloakSpy.isLoggedIn).toHaveBeenCalled();
   });
 
-  it('should delegate getUsername to KeycloakService', () => {
+  it('should return currentUsername from getUsername()', () => {
     expect(service.getUsername()).toBe('testuser');
   });
 
@@ -79,18 +81,41 @@ describe('AuthKeycloakService', () => {
     expect(token).toBe('mock-token');
   });
 
-  it('should not call getUsername/getUserRoles when not logged in', () => {
-    const notLoggedInSpy = jasmine.createSpyObj('KeycloakService', [
-      'isLoggedIn', 'getUsername', 'getUserRoles', 'isUserInRole',
-      'login', 'logout', 'getToken', 'loadUserProfile',
+  it('should fall back to email when preferred_username is missing', () => {
+    const spy = jasmine.createSpyObj('KeycloakService', [
+      'isLoggedIn', 'getUserRoles', 'isUserInRole',
+      'login', 'logout', 'getToken', 'getKeycloakInstance', 'loadUserProfile',
     ]);
-    notLoggedInSpy.isLoggedIn.and.returnValue(false);
+    spy.isLoggedIn.and.returnValue(true);
+    spy.getUserRoles.and.returnValue([]);
+    spy.getKeycloakInstance.and.returnValue({
+      tokenParsed: { email: 'fallback@example.com' },
+    } as any);
 
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       providers: [
         AuthKeycloakService,
-        { provide: KeycloakService, useValue: notLoggedInSpy },
+        { provide: KeycloakService, useValue: spy },
+      ],
+    });
+
+    const svc = TestBed.inject(AuthKeycloakService);
+    expect(svc.currentUsername()).toBe('fallback@example.com');
+  });
+
+  it('should leave signals empty when not logged in', () => {
+    const spy = jasmine.createSpyObj('KeycloakService', [
+      'isLoggedIn', 'getUserRoles', 'isUserInRole',
+      'login', 'logout', 'getToken', 'getKeycloakInstance', 'loadUserProfile',
+    ]);
+    spy.isLoggedIn.and.returnValue(false);
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        AuthKeycloakService,
+        { provide: KeycloakService, useValue: spy },
       ],
     });
 
@@ -98,7 +123,7 @@ describe('AuthKeycloakService', () => {
     expect(svc.isAuthenticated()).toBeFalse();
     expect(svc.currentUsername()).toBe('');
     expect(svc.currentRoles()).toEqual([]);
-    expect(notLoggedInSpy.getUsername).not.toHaveBeenCalled();
-    expect(notLoggedInSpy.getUserRoles).not.toHaveBeenCalled();
+    expect(spy.getKeycloakInstance).not.toHaveBeenCalled();
+    expect(spy.getUserRoles).not.toHaveBeenCalled();
   });
 });

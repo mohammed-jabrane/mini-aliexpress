@@ -1,6 +1,10 @@
 # Mini AliExpress — Project Checklist
 
-## 1. Project Setup (FA01)
+---
+
+## 1. Project Setup
+
+### Project Init (FA01)
 
 - [x] Initialize root Git repository
 - [x] Create `.gitignore` (root level)
@@ -27,10 +31,6 @@
 - [x] Add plugin for run local (docker-compose, frontend, backend)
 - [x] Add configuration for IntelliJ mode for run all
 
-### Upgrade .md structure for more details (FA04)
-
-- [x] Create a new structure of .md based on best practice
-
 ### Frontend Setup (FA03)
 
 - [x] Install NgRx (`@ngrx/store`, `@ngrx/effects`, `@ngrx/store-devtools`, `@ngrx/entity`)
@@ -42,6 +42,10 @@
 - [x] Configure environment files (`environment.ts`, `environment.local-k8s.ts`, `environment.azure.ts`)
 - [x] Create Dockerfile (nginx + Angular build)
 - [x] Configure proxy (`proxy.conf.json`) for local dev
+
+### Documentation Structure (FA04)
+
+- [x] Create a new structure of .md based on best practice
 
 ---
 
@@ -59,133 +63,129 @@
 - [x] Create changeset: `007-seed-sample-products`
 - [x] Create changeset: `008-seed-fake-data`
 
-### Create API Process for Product (FA06)
-- [x] Create package `domain.model`
-- [x] Create entity `Product` (id, name, description, price, stock, category, sellerId, images, createdAt, updatedAt)
-- [x] Create entity `Category` (id, name, parentId)
-
-- [x] Create package `domain.port.in` (input ports / use cases)
-- [x] Create `CreateProductUseCase`
-- [x] Create `SearchProductsUseCase`
-- [x] Create `GetProductByIdUseCase`
-- [x] Create `UpdateProductUseCase`
-- [x] Create `DeleteProductUseCase`
-
-- [x] Create package `domain.port.out` (output ports)
-- [x] Create `ProductRepositoryPort`
-- [x] Create `CategoryRepositoryPort`
-
-- [x] Create package `domain.exception`
-- [x] Create `ProductNotFoundException`
-
-- [x] Create package `application.service`
-- [x] Implement `ProductService` (implements product use cases)
-
-- [x] Create package `application.dto`
-- [x] Create `ProductRequestDTO` / `ProductResponseDTO`
-- [x] Create `CategoryDTO`
-
-- [x] Create package `application.mapper`
-- [x] Create `ProductMapper` (MapStruct, DTO <-> Domain)
-
-- [x] Create package `infrastructure.adapter.in.web`
-- [x] Create `ProductController` (REST CRUD + search)
-- [x] Create `CategoryController` (list, tree)
-
-- [x] Create package `infrastructure.adapter.out.persistence`
-- [x] Create `ProductJpaEntity` + `ProductJpaRepository`
-- [x] Create `CategoryJpaEntity` + `CategoryJpaRepository`
-- [x] Create `ProductPersistenceMapper` + `CategoryPersistenceMapper` (MapStruct)
-- [x] Create `ProductPersistenceAdapter` + `CategoryPersistenceAdapter`
-- [x] Add MapStruct + lombok-mapstruct-binding dependencies to `pom.xml`
-
-### Configuration OAuth2 and Keycloak Configuration with OpenAPI Swagger (FA07)
+### OAuth2, Keycloak & OpenAPI (FA07)
 
 - [x] Create `OpenApiConfig` with OAuth2 Authorization Code + PKCE security scheme
 - [x] Configure Swagger UI OAuth2 client (`client-id`, PKCE) in `application.yaml` / `application-local.yaml`
 - [x] Add Swagger redirect URI to Keycloak realm export (`mini-aliexpress-frontend` client)
 - [x] SecurityConfig permits Swagger UI and OpenAPI endpoints
 
-### Create API Process for Category (FA11)
+### Product API (FA06)
 
+- [x] Create entity `Product` (id, name, description, price, stock, category, sellerId, images, createdAt, updatedAt)
+- [x] Create entity `Category` (id, name, parentId)
+- [x] Create `CreateProductUseCase`, `SearchProductsUseCase`, `GetProductByIdUseCase`, `UpdateProductUseCase`, `DeleteProductUseCase`
+- [x] Create `ProductRepositoryPort`, `CategoryRepositoryPort`
+- [x] Create `ProductNotFoundException`
+- [x] Implement `ProductService` (implements product use cases)
+- [x] Create `ProductRequestDTO` / `ProductResponseDTO` / `CategoryDTO`
+- [x] Create `ProductMapper` (MapStruct, DTO <-> Domain)
+- [x] Create `ProductController` (REST CRUD + search)
+- [x] Create `CategoryController` (list, tree)
+- [x] Create `ProductJpaEntity` + `ProductJpaRepository`
+- [x] Create `CategoryJpaEntity` + `CategoryJpaRepository`
+- [x] Create `ProductPersistenceMapper` + `CategoryPersistenceMapper` (MapStruct)
+- [x] Create `ProductPersistenceAdapter` + `CategoryPersistenceAdapter`
+- [x] Add MapStruct + lombok-mapstruct-binding dependencies to `pom.xml`
 
-### Domain Layer
+### Category API — CRUD (FA11)
 
+- [ ] Create `CreateCategoryUseCase`
+- [ ] Create `GetCategoryByIdUseCase`
+- [ ] Create `GetAllCategoriesUseCase`
+- [ ] Create `GetCategoryTreeUseCase`
+- [ ] Create `UpdateCategoryUseCase`
+- [ ] Create `DeleteCategoryUseCase`
+- [ ] Create `CategoryNotFoundException`
+- [ ] Implement `CategoryService` (implements category use cases)
+- [ ] Create `CategoryRequestDTO` / `CategoryResponseDTO`
+- [ ] Create `CategoryMapper` (MapStruct, DTO <-> Domain)
+- [ ] Update `CategoryController` (add create, update, delete endpoints)
+- [ ] Update `CategoryPersistenceAdapter` (implement new use case ports)
+- [ ] Test `CategoryService` (mock `CategoryRepositoryPort`)
+- [ ] Test `CategoryMapper` (DTO <-> Domain)
+- [ ] Test `CategoryController` (`@WebMvcTest` + MockMvc)
+
+### Cart API
+
+#### Domain
 - [ ] Create entity `Cart` (id, userId, items, createdAt)
 - [ ] Create entity `CartItem` (productId, quantity, unitPrice)
-- [ ] Create entity `Order` (id, userId, items, status, totalAmount, shippingAddress, createdAt)
-- [ ] Create entity `OrderItem` (productId, productName, quantity, unitPrice)
-- [ ] Create enum `OrderStatus` (PENDING, PAID, SHIPPED, DELIVERED, CANCELLED)
-- [ ] Create entity `User` (id, username, email, firstName, lastName, role)
-- [ ] Create entity `Address` (id, userId, street, city, zipCode, country)
-- [ ] Create value objects where appropriate (Money, ProductId, etc.)
-
 - [ ] Create `AddToCartUseCase`
 - [ ] Create `UpdateCartItemUseCase`
 - [ ] Create `RemoveFromCartUseCase`
 - [ ] Create `GetCartUseCase`
+- [ ] Create `CartRepositoryPort`
+- [ ] Create `InsufficientStockException`
+
+#### Application
+- [ ] Implement `CartService` (implements cart use cases)
+- [ ] Create `CartDTO` / `CartItemDTO`
+- [ ] Create `CartMapper`
+
+#### Infrastructure
+- [ ] Create `CartController` (get, add, update, remove)
+- [ ] Create `CartJpaEntity` / `CartItemJpaEntity` + `CartJpaRepository`
+- [ ] Create `CartPersistenceAdapter` (implements `CartRepositoryPort`)
+- [ ] Create Cart JPA entity <-> Domain model mappers
+
+### Order API
+
+#### Domain
+- [ ] Create entity `Order` (id, userId, items, status, totalAmount, shippingAddress, createdAt)
+- [ ] Create entity `OrderItem` (productId, productName, quantity, unitPrice)
+- [ ] Create enum `OrderStatus` (PENDING, PAID, SHIPPED, DELIVERED, CANCELLED)
 - [ ] Create `PlaceOrderUseCase`
 - [ ] Create `GetOrderByIdUseCase`
 - [ ] Create `ListOrdersUseCase`
 - [ ] Create `UpdateOrderStatusUseCase`
-- [ ] Create `UploadImageUseCase`
-
-- [ ] Create `CartRepositoryPort`
 - [ ] Create `OrderRepositoryPort`
-- [ ] Create `ImageStoragePort`
 - [ ] Create `OrderEventPublisherPort`
-
-- [ ] Create `InsufficientStockException`
 - [ ] Create `OrderNotFoundException`
-- [ ] Create `UnauthorizedAccessException`
 
-### Application Layer
-
-- [ ] Implement `CartService` (implements cart use cases)
+#### Application
 - [ ] Implement `OrderService` (implements order use cases)
-- [ ] Implement `ImageService` (implements image use case)
-
-- [ ] Create `CartDTO` / `CartItemDTO`
 - [ ] Create `OrderRequestDTO` / `OrderResponseDTO`
 - [ ] Create `AddressDTO`
 - [ ] Create `PageResponseDTO<T>` (pagination wrapper)
-
-- [ ] Create `CartMapper`
 - [ ] Create `OrderMapper`
 - [ ] Create `AddressMapper`
 
-### Infrastructure Layer — Adapters IN (Web)
-
-- [ ] Create `CartController` (get, add, update, remove)
+#### Infrastructure
 - [ ] Create `OrderController` (place, get, list, update status)
-- [ ] Create `ImageController` (upload endpoint)
-- [ ] Create `GlobalExceptionHandler` (`@RestControllerAdvice`)
-
-### Infrastructure Layer — Adapters OUT (Persistence)
-
-- [ ] Create `CartJpaEntity` / `CartItemJpaEntity` + `CartJpaRepository`
 - [ ] Create `OrderJpaEntity` / `OrderItemJpaEntity` + `OrderJpaRepository`
-- [ ] Create `ProductPersistenceAdapter` (implements `ProductRepositoryPort`)
-- [ ] Create `CartPersistenceAdapter` (implements `CartRepositoryPort`)
 - [ ] Create `OrderPersistenceAdapter` (implements `OrderRepositoryPort`)
-- [ ] Create JPA entity <-> Domain model mappers
+- [ ] Create Order JPA entity <-> Domain model mappers
 
-### Infrastructure Layer — Adapters OUT (Messaging)
+### User & Address
 
-- [ ] Create package `infrastructure.adapter.out.messaging`
+- [ ] Create entity `User` (id, username, email, firstName, lastName, role)
+- [ ] Create entity `Address` (id, userId, street, city, zipCode, country)
+- [ ] Create value objects where appropriate (Money, ProductId, etc.)
+- [ ] Create `UnauthorizedAccessException`
+
+### Image Upload
+
+- [ ] Create `UploadImageUseCase`
+- [ ] Create `ImageStoragePort`
+- [ ] Implement `ImageService` (implements image use case)
+- [ ] Create `ImageController` (upload endpoint)
+- [ ] Create `MinioImageStorageAdapter` (implements `ImageStoragePort`)
+- [ ] Create `AzureBlobImageStorageAdapter` (implements `ImageStoragePort` for azure-services profile)
+
+### Kafka Messaging
+
 - [ ] Create `OrderEventKafkaPublisher` (implements `OrderEventPublisherPort`)
 - [ ] Create `OrderEventConsumer` (`@KafkaListener`)
 - [ ] Create `StockEventConsumer` (`@KafkaListener`)
 - [ ] Define Kafka topics (order-events, product-events, payment-events, stock-events)
 - [ ] Create event DTOs (`OrderPlacedEvent`, `PaymentProcessedEvent`, `StockLowEvent`)
 
-### Infrastructure Layer — Adapters OUT (Storage)
+### Global Error Handling
 
-- [ ] Create package `infrastructure.adapter.out.storage`
-- [ ] Create `MinioImageStorageAdapter` (implements `ImageStoragePort`)
-- [ ] Create `AzureBlobImageStorageAdapter` (implements `ImageStoragePort` for azure-services profile)
+- [ ] Create `GlobalExceptionHandler` (`@RestControllerAdvice`)
 
-### Infrastructure Layer — Configuration
+### Infrastructure Configuration
 
 - [ ] Create `infrastructure.config.kafka.KafkaConfig`
 - [ ] Create `infrastructure.config.kafka.KafkaTopicConfig`
@@ -202,12 +202,12 @@
 
 ### Core Module (FA10)
 
-- [x] Create `core/auth/keycloak.service.ts`
-- [x] Create `core/auth/auth.guard.ts`
-- [x] Create `core/auth/role.guard.ts`
-- [x] Create `core/interceptors/auth.interceptor.ts` (attach JWT token)
-- [x] Create `core/interceptors/error.interceptor.ts` (global error handling)
-- [x] Create `core/services/notification.service.ts` (toast messages)
+- [x] Create `core/auth/keycloak.service.ts` (`AuthKeycloakService` — signals wrapper)
+- [x] Create `core/auth/auth.guard.ts` (functional `CanActivateFn`)
+- [x] Create `core/auth/role.guard.ts` (functional `CanActivateFn` with role check)
+- [x] Create `core/interceptors/auth.interceptor.ts` (401/403 response handling)
+- [x] Create `core/interceptors/error.interceptor.ts` (global HTTP error notifications)
+- [x] Create `core/services/notification.service.ts` (MatSnackBar wrapper)
 
 ### Shared Module (FA09)
 
@@ -274,30 +274,19 @@
 
 ### NgRx Store
 
-- [ ] Create `store/product/product.actions.ts`
-- [ ] Create `store/product/product.reducer.ts`
-- [ ] Create `store/product/product.effects.ts`
-- [ ] Create `store/product/product.selectors.ts`
-- [ ] Create `store/cart/cart.actions.ts`
-- [ ] Create `store/cart/cart.reducer.ts`
-- [ ] Create `store/cart/cart.effects.ts`
-- [ ] Create `store/cart/cart.selectors.ts`
-- [ ] Create `store/order/order.actions.ts`
-- [ ] Create `store/order/order.reducer.ts`
-- [ ] Create `store/order/order.effects.ts`
-- [ ] Create `store/order/order.selectors.ts`
-- [ ] Create `store/auth/auth.actions.ts`
-- [ ] Create `store/auth/auth.reducer.ts`
-- [ ] Create `store/auth/auth.selectors.ts`
+- [ ] Create `store/product/` (actions, reducer, effects, selectors)
+- [ ] Create `store/cart/` (actions, reducer, effects, selectors)
+- [ ] Create `store/order/` (actions, reducer, effects, selectors)
+- [ ] Create `store/auth/` (actions, reducer, selectors)
 
 ### Routing (app.routes.ts)
 
 - [x] Configure lazy-loaded route for `/products`
-- [ ] Configure lazy-loaded route for `/cart`
-- [ ] Configure lazy-loaded route for `/orders`
-- [ ] Configure lazy-loaded route for `/user`
-- [ ] Configure lazy-loaded route for `/seller` (with `RoleGuard ROLE_SELLER`)
-- [ ] Configure lazy-loaded route for `/admin` (with `RoleGuard ROLE_ADMIN`)
+- [ ] Configure lazy-loaded route for `/cart` (with `authGuard`)
+- [ ] Configure lazy-loaded route for `/orders` (with `authGuard`)
+- [ ] Configure lazy-loaded route for `/user` (with `authGuard`)
+- [ ] Configure lazy-loaded route for `/seller` (with `authGuard` + `roleGuard ROLE_SELLER`)
+- [ ] Configure lazy-loaded route for `/admin` (with `authGuard` + `roleGuard ROLE_ADMIN`)
 - [x] Configure wildcard redirect to `/products`
 
 ---
@@ -384,15 +373,10 @@
 - [ ] Test `ProductService` (HTTP calls via `HttpClientTestingModule`)
 - [ ] Test `CartService`
 - [ ] Test `OrderService`
-- [ ] Test `product.reducer.ts` (state transitions)
-- [ ] Test `cart.reducer.ts`
-- [ ] Test `product.effects.ts` (`provideMockActions`, marbles)
-- [ ] Test `cart.effects.ts`
-- [ ] Test `product.selectors.ts` (projector)
-- [ ] Test `cart.selectors.ts`
-- [ ] Test `product.mapper.ts`
-- [ ] Test `cart.mapper.ts`
-- [ ] Test `order.mapper.ts`
+- [ ] Test NgRx reducers (state transitions)
+- [ ] Test NgRx effects (`provideMockActions`, marbles)
+- [ ] Test NgRx selectors (projector)
+- [ ] Test mappers (`product.mapper.ts`, `cart.mapper.ts`, `order.mapper.ts`)
 - [ ] Test `CurrencyFormatPipe`
 - [ ] Test `AuthGuard` / `RoleGuard`
 - [ ] Achieve > 75% code coverage
@@ -416,11 +400,7 @@
 - [ ] Write `checkout.feature` (place order, stock validation, payment)
 - [ ] Write `user-auth.feature` (register, login, role access)
 - [ ] Write `seller-dashboard.feature` (create product, manage inventory, fulfill order)
-- [ ] Implement step definitions for Product steps
-- [ ] Implement step definitions for Cart steps
-- [ ] Implement step definitions for Order steps
-- [ ] Implement step definitions for Auth steps
-- [ ] Implement step definitions for Seller steps
+- [ ] Implement step definitions (Product, Cart, Order, Auth, Seller)
 - [ ] Create `CucumberRunnerIT.java`
 - [ ] Create `CucumberSpringConfig.java` (Testcontainers for Cucumber context)
 
@@ -436,27 +416,19 @@
 
 ### Performance Tests — JMeter + Gatling
 
-- [ ] Create JMeter test plan: `product-search.jmx`
-- [ ] Create JMeter test plan: `checkout-flow.jmx`
-- [ ] Create JMeter test plan: `concurrent-users.jmx` (ramp to 500 users)
+- [ ] Create JMeter test plans (`product-search.jmx`, `checkout-flow.jmx`, `concurrent-users.jmx`)
 - [ ] Create test data files (`users.csv`, `products.csv`)
-- [ ] Create Gatling simulation: `ProductSearchSimulation`
-- [ ] Create Gatling simulation: `CheckoutSimulation`
-- [ ] Validate: avg response < 200ms (GET /products)
-- [ ] Validate: p95 < 500ms (GET /products/{id})
-- [ ] Validate: throughput > 50 req/s (checkout)
-- [ ] Validate: error rate < 1% under load
+- [ ] Create Gatling simulations (`ProductSearchSimulation`, `CheckoutSimulation`)
+- [ ] Validate: avg response < 200ms, p95 < 500ms, throughput > 50 req/s, error rate < 1%
 - [ ] Run 1h endurance test — no memory leaks
 
 ### Security Tests
 
-- [ ] Run Trivy on backend Docker image — 0 CRITICAL/HIGH
-- [ ] Run Trivy on frontend Docker image — 0 CRITICAL/HIGH
+- [ ] Run Trivy on Docker images — 0 CRITICAL/HIGH
 - [ ] Run Trivy filesystem scan on codebase
 - [ ] Run OWASP Dependency-Check on Maven dependencies
 - [ ] Run `npm audit` on frontend dependencies — 0 high/critical
-- [ ] Run OWASP ZAP baseline scan on running backend
-- [ ] Run OWASP ZAP full scan on running frontend
+- [ ] Run OWASP ZAP baseline scan on running app
 - [ ] Run SonarQube analysis — 0 blocker/critical issues
 - [ ] Run Checkmarx SAST scan (if available)
 - [ ] Run Checkov on Terraform files — 0 FAILED checks
