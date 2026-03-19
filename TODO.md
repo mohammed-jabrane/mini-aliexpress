@@ -265,28 +265,28 @@
 - [ ] Create `features/seller/pages/orders/` (incoming orders, update status)
 - [ ] Create `features/seller/services/seller.service.ts`
 
-### Feature — Admin (optional)
+### Feature — Admin (FA15)
 
 - [ ] Create `features/admin/admin.routes.ts` (lazy-loaded, role-guarded)
 - [ ] Create `features/admin/pages/dashboard/` (platform metrics)
 - [ ] Create `features/admin/pages/user-management/` (list, ban)
 - [ ] Create `features/admin/pages/category-management/` (CRUD categories)
 
-### NgRx Store
+### NgRx Store (FA14)
 
 - [ ] Create `store/product/` (actions, reducer, effects, selectors)
 - [ ] Create `store/cart/` (actions, reducer, effects, selectors)
 - [ ] Create `store/order/` (actions, reducer, effects, selectors)
 - [ ] Create `store/auth/` (actions, reducer, selectors)
 
-### Routing (app.routes.ts)
+### Routing (app.routes.ts) (FA13)
 
 - [x] Configure lazy-loaded route for `/products`
-- [ ] Configure lazy-loaded route for `/cart` (with `authGuard`)
-- [ ] Configure lazy-loaded route for `/orders` (with `authGuard`)
-- [ ] Configure lazy-loaded route for `/user` (with `authGuard`)
-- [ ] Configure lazy-loaded route for `/seller` (with `authGuard` + `roleGuard ROLE_SELLER`)
-- [ ] Configure lazy-loaded route for `/admin` (with `authGuard` + `roleGuard ROLE_ADMIN`)
+- [x] Configure lazy-loaded route for `/cart` (with `authGuard`)
+- [x] Configure lazy-loaded route for `/orders` (with `authGuard`)
+- [x] Configure lazy-loaded route for `/user` (with `authGuard`)
+- [x] Configure lazy-loaded route for `/seller` (with `authGuard` + `roleGuard ROLE_SELLER`)
+- [x] Configure lazy-loaded route for `/admin` (with `authGuard` + `roleGuard ROLE_ADMIN`)
 - [x] Configure wildcard redirect to `/products`
 
 ---

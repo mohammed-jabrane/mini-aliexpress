@@ -34,7 +34,7 @@ core/
     notification.service.ts   → MatSnackBar wrapper (success, error, info, warn)
 
 shared/    → Reusable components, pipes, mappers
-features/  → Lazy-loaded feature modules (product, cart, order, user)
+features/  → Lazy-loaded feature modules (product, cart, order, user, seller, admin)
 store/     → NgRx global state (actions, reducers, effects, selectors)
 ```
 
