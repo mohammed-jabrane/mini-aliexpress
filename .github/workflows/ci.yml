@@ -20,12 +20,12 @@ jobs:
         working-directory: backend
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
@@ -36,95 +36,18 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: backend-test-results
           path: backend/target/surefire-reports/
           retention-days: 7
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: backend-coverage
           path: backend/target/site/jacoco/
           retention-days: 7
-
-  # ─── Backend SonarQube (Docker) ───────────────────────────
-  backend-sonar:
-    name: Backend — SonarQube Analysis
-    runs-on: ubuntu-latest
-    needs: backend-build
-
-    services:
-      sonarqube:
-        image: sonarqube:10-community
-        ports:
-          - 9000:9000
-        env:
-          SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
-        options: >-
-          --health-cmd "curl -f http://localhost:9000/api/system/health || exit 1"
-          --health-interval 15s
-          --health-timeout 10s
-          --health-retries 20
-          --health-start-period 60s
-
-    defaults:
-      run:
-        working-directory: backend
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-          cache: maven
-
-      - name: Cache SonarQube packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: sonar-${{ runner.os }}-${{ hashFiles('backend/pom.xml') }}
-          restore-keys: sonar-${{ runner.os }}-
-
-      - name: Wait for SonarQube to be ready
-        run: |
-          echo "Waiting for SonarQube..."
-          until curl -sf http://localhost:9000/api/system/health | grep -q '"health":"GREEN"'; do
-            sleep 5
-          done
-          echo "SonarQube is ready"
-
-      - name: Setup SonarQube (change default password & create token)
-        id: sonar-setup
-        run: |
-          # Change default admin password
-          curl -sf -u admin:admin \
-            -X POST "http://localhost:9000/api/users/change_password" \
-            -d "login=admin&previousPassword=admin&password=admin123"
-
-          # Generate a project token
-          TOKEN=$(curl -sf -u admin:admin123 \
-            -X POST "http://localhost:9000/api/user_tokens/generate" \
-            -d "name=ci-token" | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
-
-          echo "::add-mask::$TOKEN"
-          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
-
-      - name: Run SonarQube analysis
-        run: |
-          ./mvnw verify sonar:sonar -B \
-            -Dsonar.projectKey=mini-aliexpress-backend \
-            -Dsonar.projectName="Mini AliExpress Backend" \
-            -Dsonar.host.url=http://localhost:9000 \
-            -Dsonar.token=${{ steps.sonar-setup.outputs.token }} \
-            -Dsonar.qualitygate.wait=true \
-            -Dsonar.qualitygate.timeout=120
 
   # ─── Frontend ─────────────────────────────────────────────
   frontend-build:
@@ -135,10 +58,10 @@ jobs:
         working-directory: frontend
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Node.js 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
@@ -154,18 +77,63 @@ jobs:
         run: npx ng build --configuration=production
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: frontend-coverage
           path: frontend/coverage/
           retention-days: 7
+
+  # ─── SonarCloud (monorepo) ────────────────────────────────
+  sonarcloud:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    needs: [backend-build, frontend-build]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.sonar/cache
+          key: sonar-${{ runner.os }}-${{ hashFiles('backend/pom.xml', 'frontend/package-lock.json') }}
+          restore-keys: sonar-${{ runner.os }}-
+
+      - name: Build backend (classes + coverage)
+        working-directory: backend
+        run: ./mvnw verify -B
+
+      - name: Build frontend (coverage)
+        working-directory: frontend
+        run: npm ci && npx ng test --no-watch --code-coverage --browsers=ChromeHeadless
+
+      - name: SonarCloud analysis
+        uses: SonarSource/sonarcloud-github-action@v3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          JAVA_HOME: ${{ env.JAVA_HOME }}
 
   # ─── Quality Gate ─────────────────────────────────────────
   ci-passed:
     name: CI Quality Gate
     runs-on: ubuntu-latest
     if: always()
-    needs: [backend-build, frontend-build, backend-sonar]
+    needs: [backend-build, frontend-build, sonarcloud]
     steps:
       - name: Check all jobs passed
         run: |
@@ -177,8 +145,8 @@ jobs:
             echo "::error::Frontend build/tests failed"
             exit 1
           fi
-          if [ "${{ needs.backend-sonar.result }}" == "failure" ]; then
-            echo "::error::SonarQube quality gate failed"
+          if [ "${{ needs.sonarcloud.result }}" == "failure" ]; then
+            echo "::error::SonarCloud quality gate failed"
             exit 1
           fi
           echo "All checks passed"

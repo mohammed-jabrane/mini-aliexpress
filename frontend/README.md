@@ -61,7 +61,7 @@ The dev server starts at http://localhost:4200. Requires backend running (see [D
 | `@ngrx/entity`         | Installed | Entity collection management                     |
 | `keycloak-angular`     | Installed | Keycloak integration (bearer interceptor, SSO)   |
 | `keycloak-js`          | Installed | Keycloak JavaScript adapter                      |
-| `cypress`              | Planned   | E2E testing                                      |
+| `cypress`              | Installed | E2E testing                                      |
 
 ---
 
