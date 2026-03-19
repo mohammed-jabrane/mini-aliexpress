@@ -1,0 +1,43 @@
+# ============================================================
+# Profile: local (Docker Compose)
+# ============================================================
+
+spring:
+  # ── DataSource ─────────────────────────────────
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mini_aliexpress
+    username: aliexpress
+    password: aliexpress_secret
+    driver-class-name: org.postgresql.Driver
+
+  # ── JPA ────────────────────────────────────────
+  jpa:
+    show-sql: true
+
+  # ── Kafka ──────────────────────────────────────
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: mini-aliexpress
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  # ── Security (Keycloak) ────────────────────────
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/mini-aliexpress
+
+# ── Minio S3 ──────────────────────────────────
+minio:
+  url: http://localhost:9002
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket:
+    product-images: product-images
+    user-avatars: user-avatars

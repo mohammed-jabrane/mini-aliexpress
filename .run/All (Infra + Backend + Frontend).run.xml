@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="All (Infra + Backend + Frontend)" type="CompoundRunConfigurationType">
+    <toRun name="Frontend (ng serve)" type="js.build_tools.npm" />
+    <toRun name="Backend (Local)" type="SpringBootApplicationConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>
