@@ -1,26 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { KeycloakService } from 'keycloak-angular';
+import { signal } from '@angular/core';
 
 import { HeaderComponent } from './header.component';
+import { AuthKeycloakService } from '../../../core/auth/keycloak.service';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
 
   beforeEach(async () => {
-    const keycloakSpy = jasmine.createSpyObj('KeycloakService', [
-      'isLoggedIn', 'getUserRoles', 'getKeycloakInstance',
-    ]);
-    keycloakSpy.isLoggedIn.and.returnValue(false);
-    keycloakSpy.getUserRoles.and.returnValue([]);
-    keycloakSpy.getKeycloakInstance.and.returnValue({ tokenParsed: null });
+    const authServiceStub = {
+      isAuthenticated: signal(false),
+      currentUsername: signal(''),
+      currentRoles: signal<string[]>([]),
+      login: jasmine.createSpy('login'),
+      logout: jasmine.createSpy('logout'),
+    };
 
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
       providers: [
         provideRouter([]),
-        { provide: KeycloakService, useValue: keycloakSpy },
+        { provide: AuthKeycloakService, useValue: authServiceStub },
       ],
     }).compileComponents();
 

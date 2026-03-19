@@ -1,2 +1,57 @@
-<h1>Dashboard</h1>
-<p>Coming soon.</p>
+<div class="dashboard-container">
+  <h1>Dashboard</h1>
+
+  @if (loading()) {
+    <app-loading-spinner></app-loading-spinner>
+  } @else {
+    @if (stats(); as stats) {
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <mat-icon class="stat-icon">inventory_2</mat-icon>
+            <div class="stat-value">{{ stats.totalProducts }}</div>
+            <div class="stat-label">Products</div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <mat-icon class="stat-icon">category</mat-icon>
+            <div class="stat-value">{{ stats.totalCategories }}</div>
+            <div class="stat-label">Categories</div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <mat-icon class="stat-icon">shopping_bag</mat-icon>
+            <div class="stat-value">{{ stats.totalOrders }}</div>
+            <div class="stat-label">Orders</div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <mat-icon class="stat-icon">people</mat-icon>
+            <div class="stat-value">{{ stats.totalUsers }}</div>
+            <div class="stat-label">Users</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+          <a mat-flat-button color="primary" routerLink="/admin/users">
+            <mat-icon>manage_accounts</mat-icon>
+            Manage Users
+          </a>
+          <a mat-flat-button color="accent" routerLink="/admin/categories">
+            <mat-icon>folder</mat-icon>
+            Manage Categories
+          </a>
+        </div>
+      </div>
+    }
+  }
+</div>

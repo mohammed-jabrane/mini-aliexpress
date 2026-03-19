@@ -12,8 +12,11 @@ export class AuthKeycloakService {
     const loggedIn = this.keycloakService.isLoggedIn();
     this.isAuthenticated.set(loggedIn);
     if (loggedIn) {
-      this.currentRoles.set(this.keycloakService.getUserRoles());
       const tokenParsed = this.keycloakService.getKeycloakInstance().tokenParsed;
+      const realmRoles: string[] = tokenParsed?.['realm_access']?.['roles'] ?? [];
+      const keycloakRoles = this.keycloakService.getUserRoles();
+      const allRoles = [...new Set([...realmRoles, ...keycloakRoles])];
+      this.currentRoles.set(allRoles);
       this.currentUsername.set(
         tokenParsed?.['preferred_username'] || tokenParsed?.['email'] || '',
       );

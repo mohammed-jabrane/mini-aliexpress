@@ -78,6 +78,15 @@
   border-color: rgba(255, 255, 255, 0.5);
 }
 
+.admin-btn {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.5);
+
+  mat-icon {
+    margin-right: 4px;
+  }
+}
+
 @media (max-width: 600px) {
   .logo-text {
     display: none;

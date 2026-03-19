@@ -17,6 +17,27 @@
   </div>
 
   <div class="actions">
+    @if (isAdmin()) {
+      <button mat-stroked-button class="admin-btn" [matMenuTriggerFor]="adminMenu">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Admin
+      </button>
+      <mat-menu #adminMenu="matMenu">
+        <button mat-menu-item routerLink="/admin">
+          <mat-icon>dashboard</mat-icon>
+          <span>Dashboard</span>
+        </button>
+        <button mat-menu-item routerLink="/admin/users">
+          <mat-icon>manage_accounts</mat-icon>
+          <span>Manage Users</span>
+        </button>
+        <button mat-menu-item routerLink="/admin/categories">
+          <mat-icon>category</mat-icon>
+          <span>Manage Categories</span>
+        </button>
+      </mat-menu>
+    }
+
     <button mat-icon-button [matBadge]="cartCount" matBadgeColor="warn" matBadgeSize="small"
             [matBadgeHidden]="cartCount === 0">
       <mat-icon>shopping_cart</mat-icon>

@@ -96,6 +96,13 @@ src/app/
 │   ├── user/                   #   User profile (authGuard)
 │   ├── seller/                 #   Seller dashboard (authGuard + roleGuard ROLE_SELLER)
 │   └── admin/                  #   Admin dashboard (authGuard + roleGuard ROLE_ADMIN)
+│       ├── services/           #     AdminService (dashboard stats, user & category management)
+│       ├── pages/
+│       │   ├── dashboard/      #     Platform metrics (products, categories, orders, users)
+│       │   ├── user-management/#     User list with ban/unban (MatTable)
+│       │   └── category-management/ # Category CRUD (MatTable + form dialog)
+│       └── components/
+│           └── category-form-dialog/ # Create/Edit category dialog (reactive form)
 │
 ├── store/                      # NgRx global state
 │   ├── product/                #   Actions, reducers, effects, selectors
