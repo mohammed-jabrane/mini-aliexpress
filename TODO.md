@@ -449,13 +449,15 @@
 
 ## 6. CI/CD Pipeline
 
-- [ ] Create `.github/workflows/ci.yml` (or equivalent)
-- [ ] Backend: build + unit tests + integration tests
-- [ ] Frontend: build + unit tests + lint
+- [x] Create `.github/workflows/ci.yml` (PR quality gate)
+- [x] Backend: build + unit tests + SonarQube analysis
+- [x] Frontend: build + unit tests (ChromeHeadless) + coverage
+- [x] Quality gate job (`ci-passed`) — blocks merge if any check fails
+- [ ] Add integration tests job (Testcontainers)
+- [ ] Add lint job (ESLint frontend, Checkstyle backend)
 - [ ] Run Cucumber functional tests
 - [ ] Run Trivy container scan
 - [ ] Run OWASP Dependency-Check
-- [ ] Run SonarQube analysis
 - [ ] Run Checkov on Terraform
 - [ ] Build & push Docker images to ACR
 - [ ] Deploy to staging (Helm upgrade)

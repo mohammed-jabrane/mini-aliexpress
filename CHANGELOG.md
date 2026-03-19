@@ -33,12 +33,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Minikube Helm chart for local Kubernetes deployment
 - Azure AKS Terraform + Helm deployment profile
-
-## [2.1.0] — Planned
-
-### Added
 - Admin Panel
 - Comprehensive testing strategy (unit, integration, BDD, performance, security)
+
+## [2.1.0] - GitHub Actions CI Pipeline
+
+### Added
+- GitHub Actions CI workflow (`.github/workflows/ci.yml`) — required quality gate before merge
+- Backend: build, unit tests, JaCoCo coverage
+- SonarQube: spins up `sonarqube:10-community` as a service container (no external server needed)
+- Frontend: install, unit tests (ChromeHeadless), production build, coverage
+- `ci-passed` job aggregates all checks — use as required status check in branch protection rules
 
 ## [2.0.0] - Core Module (Auth, Guards, Interceptors, Notifications)
 
