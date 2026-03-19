@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Lazy-loaded routes for all feature modules: `/cart`, `/orders`, `/user`, `/seller`, `/admin` (FA13)
+- `authGuard` on `/cart`, `/orders`, `/user` — redirects unauthenticated users to Keycloak login
+- `authGuard` + `roleGuard` on `/seller` (`ROLE_SELLER`) and `/admin` (`ROLE_ADMIN`)
+- Placeholder page components: `CartPageComponent`, `OrderHistoryComponent`, `ProfileComponent`, `ProductManagementComponent`, `DashboardComponent`
+- Feature route files: `cart.routes.ts`, `order.routes.ts`, `user.routes.ts`, `seller.routes.ts`, `admin.routes.ts`
+
 ## [5.0.0] — Planned
 
 ### Added

@@ -91,9 +91,11 @@ src/app/
 │
 ├── features/                   # Lazy-loaded feature modules
 │   ├── product/                #   Product listing, detail, search
-│   ├── cart/                   #   Shopping cart
-│   ├── order/                  #   Order management
-│   └── user/                   #   User profile
+│   ├── cart/                   #   Shopping cart (authGuard)
+│   ├── order/                  #   Order history (authGuard)
+│   ├── user/                   #   User profile (authGuard)
+│   ├── seller/                 #   Seller dashboard (authGuard + roleGuard ROLE_SELLER)
+│   └── admin/                  #   Admin dashboard (authGuard + roleGuard ROLE_ADMIN)
 │
 ├── store/                      # NgRx global state
 │   ├── product/                #   Actions, reducers, effects, selectors
