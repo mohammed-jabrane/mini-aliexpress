@@ -12,8 +12,11 @@ export class AuthKeycloakService {
     const loggedIn = this.keycloakService.isLoggedIn();
     this.isAuthenticated.set(loggedIn);
     if (loggedIn) {
-      this.currentUsername.set(this.keycloakService.getUsername());
       this.currentRoles.set(this.keycloakService.getUserRoles());
+      const tokenParsed = this.keycloakService.getKeycloakInstance().tokenParsed;
+      this.currentUsername.set(
+        tokenParsed?.['preferred_username'] || tokenParsed?.['email'] || '',
+      );
     }
   }
 
@@ -22,7 +25,7 @@ export class AuthKeycloakService {
   }
 
   getUsername(): string {
-    return this.keycloakService.getUsername();
+    return this.currentUsername();
   }
 
   getUserRoles(): string[] {

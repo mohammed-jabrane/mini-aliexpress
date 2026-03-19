@@ -51,10 +51,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `NotificationService` — `MatSnackBar` wrapper with `success`, `error`, `info`, `warn` methods (top-right, color-coded)
 - Global snackbar CSS classes (`snackbar-success`, `snackbar-error`, `snackbar-info`, `snackbar-warn`)
 - Commented-out route skeletons in `app.routes.ts` for `/cart`, `/orders`, `/seller`, `/admin` with guard patterns
+- Unit tests for all core module files (31 specs)
 
 ### Changed
-- `HeaderComponent` now uses `AuthKeycloakService` signals instead of `KeycloakService` directly
+- `HeaderComponent` now uses `AuthKeycloakService` signals via `inject()` instead of `KeycloakService` directly
 - `app.config.ts` registers `authInterceptor` and `errorInterceptor` alongside keycloak-angular's built-in bearer interceptor
+- Username read from JWT `preferred_username` claim (sync) instead of `loadUserProfile()` HTTP call (avoids CORS issue with Keycloak account endpoint)
+
+### Fixed
+- `AuthKeycloakService` no longer calls `getUsername()` / `loadUserProfile()` when user is not logged in (keycloak-angular throws if profile not loaded)
 
 ## [1.1.0] - MVP release
 
