@@ -84,10 +84,11 @@ jobs:
           path: frontend/coverage/
           retention-days: 7
 
-  # ─── SonarCloud (monorepo) ────────────────────────────────
+  # ─── SonarCloud (PR only) ───────────────────────────────
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     needs: [backend-build, frontend-build]
     steps:
       - uses: actions/checkout@v6
@@ -129,11 +130,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           JAVA_HOME: ${{ env.JAVA_HOME }}
 
-  # ─── Quality Gate ─────────────────────────────────────────
+  # ─── Quality Gate (PR only — required status check to block merge) ─
   ci-passed:
     name: CI Quality Gate
     runs-on: ubuntu-latest
-    if: always()
+    if: always() && github.event_name == 'pull_request'
     needs: [backend-build, frontend-build, sonarcloud]
     steps:
       - name: Check all jobs passed
@@ -152,12 +153,12 @@ jobs:
           fi
           echo "All checks passed"
 
-  # ─── Docker Push (main merge or tag) ─────────────────────
+  # ─── Docker Push (push only — runs after build/tests pass) ─────────
   docker-push:
     name: Docker — Build & Push Images
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-    needs: ci-passed
+    needs: [backend-build, frontend-build]
     steps:
       - uses: actions/checkout@v6
 
