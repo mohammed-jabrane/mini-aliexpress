@@ -1,26 +1,26 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { CurrencyPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { Product } from '../../../../shared/models/product.model';
 import { ProductService } from '../../services/product.service';
+import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
   imports: [
-    CurrencyPipe,
+    CurrencyFormatPipe,
     RouterLink,
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
-    MatProgressSpinnerModule,
     MatDividerModule,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',

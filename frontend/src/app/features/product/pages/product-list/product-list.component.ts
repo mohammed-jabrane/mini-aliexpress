@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil, switchMap, combineLatest, BehaviorSubject } from 'rxjs';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { Product, Category } from '../../../../shared/models/product.model';
 import { ProductCardComponent } from '../../../../shared/components/product-card/product-card.component';
 import { ProductService } from '../../services/product.service';
+import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
 
 type SortOption = 'newest' | 'price-asc' | 'price-desc' | 'name';
 
@@ -18,11 +18,11 @@ type SortOption = 'newest' | 'price-asc' | 'price-desc' | 'name';
   standalone: true,
   imports: [
     MatChipsModule,
-    MatProgressSpinnerModule,
     MatIconModule,
     MatSelectModule,
     MatFormFieldModule,
     ProductCardComponent,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.scss',

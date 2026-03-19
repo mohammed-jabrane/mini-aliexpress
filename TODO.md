@@ -106,6 +106,9 @@
 - [x] Add Swagger redirect URI to Keycloak realm export (`mini-aliexpress-frontend` client)
 - [x] SecurityConfig permits Swagger UI and OpenAPI endpoints
 
+### Create API Process for Category (FA11)
+
+
 ### Domain Layer
 
 - [ ] Create entity `Cart` (id, userId, items, createdAt)
@@ -199,23 +202,23 @@
 
 ### Core Module (FA10)
 
-- [ ] Create `core/auth/keycloak.service.ts`
-- [ ] Create `core/auth/auth.guard.ts`
-- [ ] Create `core/auth/role.guard.ts`
-- [ ] Create `core/interceptors/auth.interceptor.ts` (attach JWT token)
-- [ ] Create `core/interceptors/error.interceptor.ts` (global error handling)
-- [ ] Create `core/services/notification.service.ts` (toast messages)
+- [x] Create `core/auth/keycloak.service.ts`
+- [x] Create `core/auth/auth.guard.ts`
+- [x] Create `core/auth/role.guard.ts`
+- [x] Create `core/interceptors/auth.interceptor.ts` (attach JWT token)
+- [x] Create `core/interceptors/error.interceptor.ts` (global error handling)
+- [x] Create `core/services/notification.service.ts` (toast messages)
 
 ### Shared Module (FA09)
 
 - [x] Create `shared/components/header/` (navbar, search bar, cart icon, user menu)
 - [x] Create `shared/components/footer/`
 - [x] Create `shared/components/product-card/` (reusable card component)
-- [ ] Create `shared/components/pagination/`
-- [ ] Create `shared/components/loading-spinner/`
-- [ ] Create `shared/components/confirm-dialog/`
-- [ ] Create `shared/pipes/currency-format.pipe.ts`
-- [ ] Create `shared/pipes/truncate.pipe.ts`
+- [x] Create `shared/components/pagination/`
+- [x] Create `shared/components/loading-spinner/`
+- [x] Create `shared/components/confirm-dialog/`
+- [x] Create `shared/pipes/currency-format.pipe.ts`
+- [x] Create `shared/pipes/truncate.pipe.ts`
 - [ ] Create `shared/mappers/product.mapper.ts`
 - [ ] Create `shared/mappers/cart.mapper.ts`
 - [ ] Create `shared/mappers/order.mapper.ts`

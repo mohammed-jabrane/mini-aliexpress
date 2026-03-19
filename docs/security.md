@@ -44,11 +44,14 @@ The realm is auto-imported from [
 
 ### Integration
 
-| Layer     | Integration                                                      |
-|-----------|------------------------------------------------------------------|
-| Backend   | Spring Security OAuth2 Resource Server — validates JWT tokens    |
-| Frontend  | `keycloak-angular` adapter — Authorization Code + PKCE flow      |
-| API calls | HTTP interceptor attaches `Authorization: Bearer <token>` header |
+| Layer     | Integration                                                                                        |
+|-----------|----------------------------------------------------------------------------------------------------|
+| Backend   | Spring Security OAuth2 Resource Server — validates JWT tokens                                      |
+| Frontend  | `keycloak-angular` adapter — Authorization Code + PKCE flow                                        |
+| API calls | `KeycloakBearerInterceptor` (class-based, from keycloak-angular) attaches `Authorization: Bearer`  |
+| 401 / 403 | `authInterceptor` (functional) — 401 triggers re-login, 403 shows notification + redirects         |
+| HTTP errors | `errorInterceptor` (functional) — maps other status codes to user-friendly snackbar notifications |
+| Guards    | `authGuard` — redirects to Keycloak login; `roleGuard` — checks `route.data['roles']`             |
 
 ---
 

@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { KeycloakService } from 'keycloak-angular';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +8,10 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog } from '@angular/material/dialog';
+
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { AuthKeycloakService } from '../../../core/auth/keycloak.service';
 
 @Component({
   selector: 'app-header',
@@ -27,25 +30,15 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthKeycloakService);
+  private readonly dialog = inject(MatDialog);
+
   searchQuery = '';
   cartCount = 0;
-  isLoggedIn = false;
-  username = '';
 
-  constructor(
-    private router: Router,
-    private keycloakService: KeycloakService,
-  ) {
-    this.initAuth();
-  }
-
-  private async initAuth(): Promise<void> {
-    this.isLoggedIn = await this.keycloakService.isLoggedIn();
-    if (this.isLoggedIn) {
-      const profile = await this.keycloakService.loadUserProfile();
-      this.username = profile.username || profile.email || 'User';
-    }
-  }
+  readonly isLoggedIn = this.authService.isAuthenticated;
+  readonly username = this.authService.currentUsername;
 
   onSearch(): void {
     const query = this.searchQuery.trim();
@@ -55,10 +48,23 @@ export class HeaderComponent {
   }
 
   login(): void {
-    this.keycloakService.login();
+    this.authService.login();
   }
 
   logout(): void {
-    this.keycloakService.logout();
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Logout',
+        message: 'Are you sure you want to logout?',
+        confirmLabel: 'Logout',
+        confirmColor: 'warn',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.authService.logout();
+      }
+    });
   }
 }

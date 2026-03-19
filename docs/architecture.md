@@ -73,9 +73,16 @@ infrastructure → application → domain
 src/app/
 │
 ├── core/                       # Singleton services, guards, interceptors
-│   ├── auth/                   #   Keycloak authentication
-│   ├── interceptors/           #   HTTP interceptors (token, error handling)
-│   └── guards/                 #   Route guards
+│   ├── auth/                   #   Keycloak wrapper, auth & role guards
+│   │   ├── keycloak.init.ts    #     APP_INITIALIZER (check-sso, bearer config)
+│   │   ├── keycloak.service.ts #     AuthKeycloakService (signals + methods)
+│   │   ├── auth.guard.ts       #     CanActivateFn — redirect to login if unauthenticated
+│   │   └── role.guard.ts       #     CanActivateFn — check route.data['roles']
+│   ├── interceptors/           #   HTTP interceptors (error handling)
+│   │   ├── auth.interceptor.ts #     401 → re-login, 403 → notification + redirect
+│   │   └── error.interceptor.ts#     Maps other HTTP errors to user-friendly notifications
+│   └── services/               #   Cross-cutting services
+│       └── notification.service.ts # MatSnackBar wrapper (success, error, info, warn)
 │
 ├── shared/                     # Reusable components, pipes, directives
 │   ├── components/             #   UI components (buttons, cards, modals)
@@ -106,6 +113,8 @@ src/app/
 | Lazy loading | Each feature is route-level code-split via `loadChildren` |
 | State management | NgRx Store for global state (products, cart, orders) |
 | Signals | Angular Signals for fine-grained local component reactivity |
+| Functional guards | `authGuard` and `roleGuard` as `CanActivateFn` (Angular 18 pattern) |
+| Functional interceptors | `authInterceptor` and `errorInterceptor` as `HttpInterceptorFn` |
 | Mappers | DTO-to-Model transformation layer isolates API shape from UI |
 
 ---
