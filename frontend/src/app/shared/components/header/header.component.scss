@@ -1,0 +1,89 @@
+.header-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.search-container {
+  flex: 1;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+}
+
+.search-field {
+  width: 100%;
+}
+
+:host ::ng-deep .search-field .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+:host ::ng-deep .search-field .mat-mdc-text-field-wrapper {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+:host ::ng-deep .search-field .mat-mdc-form-field-flex {
+  height: 40px;
+}
+
+:host ::ng-deep .search-field input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+:host ::ng-deep .search-field input {
+  color: white;
+}
+
+:host ::ng-deep .search-field .mat-mdc-form-field-icon-prefix mat-icon {
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0 4px 0 0;
+}
+
+:host ::ng-deep .search-field .mdc-notched-outline__leading,
+:host ::ng-deep .search-field .mdc-notched-outline__notch,
+:host ::ng-deep .search-field .mdc-notched-outline__trailing {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.login-btn {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 600px) {
+  .logo-text {
+    display: none;
+  }
+
+  .search-container {
+    max-width: 200px;
+  }
+}

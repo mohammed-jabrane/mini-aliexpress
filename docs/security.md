@@ -44,11 +44,14 @@ The realm is auto-imported from [
 
 ### Integration
 
-| Layer     | Integration                                                      |
-|-----------|------------------------------------------------------------------|
-| Backend   | Spring Security OAuth2 Resource Server — validates JWT tokens    |
-| Frontend  | `keycloak-angular` adapter — Authorization Code + PKCE flow      |
-| API calls | HTTP interceptor attaches `Authorization: Bearer <token>` header |
+| Layer     | Integration                                                                                        |
+|-----------|----------------------------------------------------------------------------------------------------|
+| Backend   | Spring Security OAuth2 Resource Server — validates JWT tokens                                      |
+| Frontend  | `keycloak-angular` adapter — Authorization Code + PKCE flow                                        |
+| API calls | `KeycloakBearerInterceptor` (class-based, from keycloak-angular) attaches `Authorization: Bearer`  |
+| 401 / 403 | `authInterceptor` (functional) — 401 triggers re-login, 403 shows notification + redirects         |
+| HTTP errors | `errorInterceptor` (functional) — maps other status codes to user-friendly snackbar notifications |
+| Guards    | `authGuard` — redirects to Keycloak login; `roleGuard` — checks `route.data['roles']`             |
 
 ---
 
@@ -62,7 +65,7 @@ Multi-layer security scanning to detect vulnerabilities across code, dependencie
 | **Checkmarx (SAST)**       | Static Application Security Testing         | Source code for injection flaws, XSS, insecure patterns  |
 | **OWASP ZAP**              | Dynamic Application Security Testing (DAST) | Running application for OWASP Top 10 vulnerabilities     |
 | **OWASP Dependency-Check** | Software Composition Analysis (SCA)         | Maven & npm dependencies for known CVEs                  |
-| **SonarQube**              | Code quality & security                     | Bugs, code smells, security hotspots, coverage           |
+| **SonarCloud**             | Code quality & security (hosted)            | Bugs, code smells, security hotspots, coverage           |
 | **Snyk**                   | Open source vulnerability scanner           | Dependencies, container images, IaC (Terraform)          |
 | **Checkov**                | Infrastructure as Code security             | Terraform misconfigurations, compliance violations       |
 
@@ -86,11 +89,9 @@ npm audit
 docker run --rm -t zaproxy/zap-stable zap-baseline.py \
   -t http://localhost:8080 -r zap-report.html
 
-# SonarQube analysis
-cd backend
-./mvnw sonar:sonar \
-  -Dsonar.host.url=http://localhost:9000 \
-  -Dsonar.token=<SONAR_TOKEN>
+# SonarCloud analysis (runs automatically in CI via GitHub Actions)
+# Manual trigger: uses sonar-project.properties at repo root
+# See .github/workflows/ci.yml for the full pipeline
 
 # Checkov (Terraform IaC)
 checkov -d infra/terraform/
@@ -105,5 +106,5 @@ snyk iac test infra/terraform/
 
 ```bash
 make security-scan        # Run OWASP + Trivy scans
-make sonar                # Run SonarQube analysis
+make sonar                # Run SonarCloud analysis
 ```

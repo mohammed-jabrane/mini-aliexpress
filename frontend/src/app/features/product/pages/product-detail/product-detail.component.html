@@ -1,0 +1,86 @@
+@if (loading()) {
+  <app-loading-spinner></app-loading-spinner>
+} @else if (error()) {
+  <div class="error-container">
+    <mat-icon class="error-icon">error_outline</mat-icon>
+    <h2>Product not found</h2>
+    <button mat-raised-button color="primary" routerLink="/products">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Products
+    </button>
+  </div>
+} @else {
+  <div class="detail-container">
+    <button mat-button routerLink="/products" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Products
+    </button>
+
+    <div class="detail-content">
+      <div class="gallery">
+        <div class="main-image-container">
+          <img
+            [src]="selectedImage()"
+            [alt]="product()!.name"
+            class="main-image"
+          />
+        </div>
+        @if (product()!.images.length > 1) {
+          <div class="thumbnail-row">
+            @for (img of product()!.images; track img; let i = $index) {
+              <img
+                [src]="img"
+                [alt]="product()!.name + ' image ' + (i + 1)"
+                class="thumbnail"
+                [class.active]="selectedImageIndex() === i"
+                (click)="selectImage(i)"
+              />
+            }
+          </div>
+        }
+      </div>
+
+      <div class="info">
+        <h1 class="product-name">{{ product()!.name }}</h1>
+
+        <p class="product-price">{{ product()!.price | currencyFormat }}</p>
+
+        <mat-divider></mat-divider>
+
+        <div class="stock-section">
+          <mat-chip [highlighted]="product()!.stock > 0" [class.out-of-stock]="product()!.stock === 0">
+            <mat-icon matChipAvatar>{{ product()!.stock > 0 ? 'check_circle' : 'cancel' }}</mat-icon>
+            {{ product()!.stock > 0 ? product()!.stock + ' in stock' : 'Out of stock' }}
+          </mat-chip>
+        </div>
+
+        <div class="description-section">
+          <h3>Description</h3>
+          <p class="description">{{ product()!.description }}</p>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="seller-section">
+          <mat-icon class="seller-icon">store</mat-icon>
+          <div>
+            <span class="seller-label">Seller</span>
+            <span class="seller-id">{{ product()!.sellerId }}</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button
+            mat-raised-button
+            color="primary"
+            class="add-to-cart-btn"
+            [disabled]="product()!.stock === 0"
+          >
+            <mat-icon>add_shopping_cart</mat-icon>
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

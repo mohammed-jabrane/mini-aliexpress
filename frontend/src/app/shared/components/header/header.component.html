@@ -1,0 +1,46 @@
+<mat-toolbar color="primary" class="header-toolbar">
+  <a class="logo" routerLink="/products">
+    <mat-icon>storefront</mat-icon>
+    <span class="logo-text">Mini AliExpress</span>
+  </a>
+
+  <div class="search-container">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        placeholder="Search products..."
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="actions">
+    <button mat-icon-button [matBadge]="cartCount" matBadgeColor="warn" matBadgeSize="small"
+            [matBadgeHidden]="cartCount === 0">
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
+
+    @if (isLoggedIn()) {
+      <button mat-icon-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item disabled>
+          <mat-icon>person</mat-icon>
+          <span>{{ username() }}</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    } @else {
+      <button mat-stroked-button class="login-btn" (click)="login()">
+        <mat-icon>login</mat-icon>
+        Login
+      </button>
+    }
+  </div>
+</mat-toolbar>
