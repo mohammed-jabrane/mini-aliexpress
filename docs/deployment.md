@@ -121,6 +121,7 @@ npm install && ng serve
 | Service         | URL                                       | Credentials                        |
 |-----------------|-------------------------------------------|------------------------------------|
 | Backend API     | http://localhost:8080/api                 | —                                  |
+| Actuator Health | http://localhost:8080/api/actuator/health | — (public)                         |
 | Swagger UI      | http://localhost:8080/api/swagger-ui.html | —                                  |
 | Frontend        | http://localhost:4200                     | —                                  |
 | PostgreSQL      | localhost:5432                            | `aliexpress` / `aliexpress_secret` |
@@ -146,21 +147,41 @@ Then open http://mini-aliexpress.local
 
 #### INT — Azure VM (`azure-int`)
 
-```bash
-# 1. Build VM image with Packer
-cd infra/packer
-packer init .
-packer build -var-file=variables.pkrvars.hcl .
+The **Deploy INT** workflow runs 3 jobs in sequence:
 
-# 2. Provision Azure resources with Terraform
+1. **Provision** — Terraform creates the Azure VM
+2. **Install Docker** — Ansible installs Docker CE on the VM
+3. **Deploy Application** — Ansible copies configs, pulls images, starts services
+
+```bash
+# 1. Provision Azure VM with Terraform
 cd infra/terraform/environments/azure-int
 cp terraform.tfvars.example terraform.tfvars   # edit with your values
 terraform init && terraform plan && terraform apply
 
-# 3. Configure VM with Ansible
+# 2. Install Docker on the VM
 cd infra/ansible
-ansible-playbook -i inventory/azure-int playbooks/deploy.yml
+ansible-playbook -i inventory/azure-int.yml playbooks/provision-int.yml
+
+# 3. Deploy the application
+ansible-playbook -i inventory/azure-int.yml playbooks/deploy-app-int.yml \
+  -e "postgres_password=<...>" \
+  -e "keycloak_admin_password=<...>" \
+  -e "minio_root_password=<...>" \
+  -e "dockerhub_username=<...>" \
+  -e "image_tag=latest"
 ```
+
+Or via GitHub Actions: **Deploy INT** workflow (manual dispatch with Azure region + image tag).
+
+| Service         | URL                                              | Credentials                |
+|-----------------|--------------------------------------------------|----------------------------|
+| Frontend        | http://\<vm-ip\>                                 | —                          |
+| Backend API     | http://\<vm-ip\>:8080/api                        | —                          |
+| Actuator Health | http://\<vm-ip\>:8080/api/actuator/health        | — (public)                 |
+| Keycloak Admin  | http://\<vm-ip\>:8180                            | `admin` / (from secret)    |
+| Kafka UI        | http://\<vm-ip\>:9090                            | —                          |
+| Minio Console   | http://\<vm-ip\>:9001                            | `minioadmin` / (from secret) |
 
 #### UAT — Azure PaaS (`azure-uat`)
 
@@ -217,7 +238,7 @@ export ENVIRONMENT="prd"
 | Env   | Trigger                        | Pipeline Steps                                              |
 |-------|--------------------------------|-------------------------------------------------------------|
 | LOCAL | Developer runs `make all`      | Docker Compose up, backend run, frontend serve              |
-| INT   | Push to `main` (CI passes)     | Packer build, Terraform apply, Ansible deploy               |
+| INT   | Manual dispatch                | Terraform apply → Ansible Docker install → Ansible deploy   |
 | UAT   | Manual approval / tag          | Terraform apply (Azure PaaS), deploy app                    |
 | OAT   | Release candidate tag          | Terraform apply (AKS oat), Helm upgrade                     |
 | PRD   | Manual approval after OAT      | Terraform apply (AKS prd), Helm upgrade                     |
@@ -260,7 +281,7 @@ make sonar                # Run SonarQube analysis
 # ── Docker & Deployment ──
 make docker-build         # Build backend + frontend Docker images
 
-make deploy-int           # Deploy to INT  (Packer + Terraform + Ansible)
+make deploy-int           # Deploy to INT  (Terraform + Ansible provision + deploy)
 make deploy-uat           # Deploy to UAT  (Terraform Azure PaaS)
 make deploy-oat           # Deploy to OAT  (Terraform + Helm AKS, verbose logging)
 make deploy-prd           # Deploy to PRD  (Terraform + Helm AKS, production)

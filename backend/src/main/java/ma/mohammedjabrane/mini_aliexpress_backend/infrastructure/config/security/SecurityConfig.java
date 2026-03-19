@@ -1,5 +1,8 @@
 package ma.mohammedjabrane.mini_aliexpress_backend.infrastructure.config.security;
 
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.actuate.health.HealthEndpoint;
+import org.springframework.boot.actuate.info.InfoEndpoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -16,6 +19,16 @@ public class SecurityConfig {
 
     @Bean
     @Order(1)
+    public SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
+        http
+            .securityMatcher(EndpointRequest.to(HealthEndpoint.class, InfoEndpoint.class))
+            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
     public SecurityFilterChain publicFilterChain(HttpSecurity http) throws Exception {
         http
             .securityMatchers(matchers -> matchers
@@ -24,9 +37,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/swagger-ui.html",
                     "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/actuator/health",
-                    "/actuator/info"
+                    "/v3/api-docs/**"
                 )
             )
             .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
@@ -35,7 +46,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    @Order(2)
+    @Order(3)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())

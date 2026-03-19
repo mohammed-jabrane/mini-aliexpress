@@ -159,6 +159,8 @@ services:
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
       KC_DB_USERNAME: ${POSTGRES_USER:-aliexpress}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_HOSTNAME: ${VM_FQDN}
+      KC_HOSTNAME_PORT: 8180
       KC_HOSTNAME_STRICT: "false"
       KC_HTTP_ENABLED: "true"
       KC_HTTP_PORT: 8180
@@ -172,7 +174,9 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - mini-ali-net
+      mini-ali-net:
+        aliases:
+          - ${VM_FQDN}
 
   # ──────────────────────────────────────────────
   # Backend (from Docker Hub)
@@ -187,7 +191,7 @@ services:
       DB_USERNAME: ${POSTGRES_USER:-aliexpress}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       KAFKA_HOST: kafka
-      KEYCLOAK_ISSUER_URI: http://keycloak:8180/realms/mini-aliexpress
+      KEYCLOAK_ISSUER_URI: http://${VM_FQDN}:8180/realms/mini-aliexpress
       MINIO_URL: http://minio:9000
       MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
       MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
@@ -209,7 +213,7 @@ services:
   # Frontend (from Docker Hub)
   # ──────────────────────────────────────────────
   frontend:
-    image: ${DOCKERHUB_USERNAME}/mini-aliexpress-frontend:${IMAGE_TAG:-latest}
+    image: ${DOCKERHUB_USERNAME}/mini-aliexpress-frontend:${FRONTEND_IMAGE_TAG:-latest-int}
     container_name: mini-ali-frontend
     restart: unless-stopped
     ports:

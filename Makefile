@@ -198,12 +198,12 @@ docker-build:
 # Deployment (Cloud Environments)
 # ==============================================================
 
-## Deploy to INT (Packer + Terraform + Ansible)
+## Deploy to INT (Terraform + Ansible provision + deploy)
 deploy-int: docker-build
 	@echo "$(CYAN)Deploying to INT (azure-int)...$(RESET)"
-	cd infra/packer && packer init . && packer build -var-file=variables.pkrvars.hcl .
 	cd infra/terraform/environments/azure-int && terraform init && terraform apply -auto-approve
-	cd infra/ansible && ansible-playbook -i inventory/azure-int playbooks/deploy.yml
+	cd infra/ansible && ansible-playbook -i inventory/azure-int.yml playbooks/provision-int.yml
+	cd infra/ansible && ansible-playbook -i inventory/azure-int.yml playbooks/deploy-app-int.yml
 	@echo "$(GREEN)INT deployment complete.$(RESET)"
 
 ## Deploy to UAT (Terraform Azure PaaS)
@@ -275,7 +275,7 @@ help:
 	@echo "    make docker-build         Build backend + frontend Docker images"
 	@echo ""
 	@echo "  $(GREEN)Deployment (Cloud)$(RESET)"
-	@echo "    make deploy-int           Deploy to INT  (Packer + Terraform + Ansible)"
+	@echo "    make deploy-int           Deploy to INT  (Terraform + Ansible provision + deploy)"
 	@echo "    make deploy-uat           Deploy to UAT  (Terraform Azure PaaS)"
 	@echo "    make deploy-oat           Deploy to OAT  (Terraform + Helm AKS)"
 	@echo "    make deploy-prd           Deploy to PRD  (Terraform + Helm AKS)"

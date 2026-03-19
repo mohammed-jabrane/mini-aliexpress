@@ -11,7 +11,8 @@ RUN npm ci
 
 # Build the application
 COPY . .
-RUN npx ng build --configuration=production
+ARG NG_CONFIG=production
+RUN npx ng build --configuration=${NG_CONFIG}
 
 # ============================================================
 # Stage 2 — Runtime

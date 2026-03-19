@@ -12,7 +12,13 @@ variable "project" {
 variable "location" {
   description = "Azure region"
   type        = string
-  default     = "francecentral"
+  default     = "westeurope"
+}
+
+variable "vm_size" {
+  description = "Azure VM size"
+  type        = string
+  default     = "Standard_D2as_v6"
 }
 
 variable "ssh_public_key" {

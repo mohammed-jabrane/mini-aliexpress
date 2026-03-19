@@ -17,14 +17,12 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
   subscription_id = var.subscription_id
-}
-
-# ── Packer Image Lookup ─────────────────────────────────────
-data "azurerm_image" "docker" {
-  name                = "mini-aliexpress-int-docker"
-  resource_group_name = "mini-aliexpress-packer-rg"
 }
 
 # ── Resource Group ───────────────────────────────────────────
@@ -137,6 +135,7 @@ resource "azurerm_public_ip" "this" {
   resource_group_name = azurerm_resource_group.this.name
   allocation_method   = "Static"
   sku                 = "Standard"
+  domain_name_label   = "${var.project}-int"
   tags                = var.tags
 }
 
@@ -165,7 +164,7 @@ resource "azurerm_linux_virtual_machine" "this" {
   name                = "${var.project}-int-vm"
   location            = var.location
   resource_group_name = azurerm_resource_group.this.name
-  size                = "Standard_B2ms"
+  size                = var.vm_size
   admin_username      = "azureuser"
   tags                = var.tags
 
@@ -184,5 +183,10 @@ resource "azurerm_linux_virtual_machine" "this" {
     disk_size_gb         = 50
   }
 
-  source_image_id = data.azurerm_image.docker.id
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
+    version   = "latest"
+  }
 }

@@ -27,7 +27,7 @@ variable "tenant_id" {
 
 variable "location" {
   type    = string
-  default = "francecentral"
+  default = "westeurope"
 }
 
 variable "resource_group" {
@@ -56,7 +56,7 @@ source "azure-arm" "ubuntu" {
   image_sku       = "22_04-lts"
 
   location = var.location
-  vm_size  = "Standard_B2s"
+  vm_size  = "Standard_D2s_v3"
 
   azure_tags = {
     project    = "mini-aliexpress"

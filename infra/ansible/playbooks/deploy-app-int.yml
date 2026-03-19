@@ -1,0 +1,146 @@
+---
+- name: Deploy Application — INT
+  hosts: all
+  become: true
+
+  tasks:
+    # ── Validate required variables ─────────────────────
+    - name: Fail if POSTGRES_PASSWORD is empty
+      ansible.builtin.fail:
+        msg: "POSTGRES_PASSWORD is empty — check GitHub secret INT_POSTGRES_PASSWORD"
+      when: postgres_password is not defined or postgres_password | length == 0
+
+    - name: Fail if MINIO_ROOT_PASSWORD is empty
+      ansible.builtin.fail:
+        msg: "MINIO_ROOT_PASSWORD is empty — check GitHub secret INT_MINIO_ROOT_PASSWORD"
+      when: minio_root_password is not defined or minio_root_password | length == 0
+
+    - name: Fail if KEYCLOAK_ADMIN_PASSWORD is empty
+      ansible.builtin.fail:
+        msg: "KEYCLOAK_ADMIN_PASSWORD is empty — check GitHub secret INT_KEYCLOAK_ADMIN_PASSWORD"
+      when: keycloak_admin_password is not defined or keycloak_admin_password | length == 0
+
+    - name: Fail if DOCKERHUB_USERNAME is empty
+      ansible.builtin.fail:
+        msg: "DOCKERHUB_USERNAME is empty — check GitHub secret DOCKERHUB_USERNAME"
+      when: dockerhub_username is not defined or dockerhub_username | length == 0
+
+    - name: Fail if VM_FQDN is empty
+      ansible.builtin.fail:
+        msg: "VM_FQDN is empty — check terraform output vm_fqdn"
+      when: vm_fqdn is not defined or vm_fqdn | length == 0
+
+    # ── Copy docker-compose.yml ──────────────────────────
+    - name: Copy docker-compose.yml
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../../docker/int/docker-compose.yml"
+        dest: /opt/mini-aliexpress/docker-compose.yml
+        owner: azureuser
+        group: azureuser
+        mode: "0644"
+
+    # ── Copy config files ────────────────────────────────
+    - name: Copy PostgreSQL init script
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../../docker/local/config/postgres/init.sql"
+        dest: /opt/mini-aliexpress/config/postgres/init.sql
+        owner: azureuser
+        group: azureuser
+        mode: "0644"
+
+    - name: Copy Keycloak realm export
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../../docker/local/config/keycloak/realm-export.json"
+        dest: /opt/mini-aliexpress/config/keycloak/realm-export.json
+        owner: azureuser
+        group: azureuser
+        mode: "0644"
+
+    - name: Copy MinIO seed images
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../../docker/local/config/minio/seed-images/"
+        dest: /opt/mini-aliexpress/config/minio/seed-images/
+        owner: azureuser
+        group: azureuser
+        mode: "0644"
+        directory_mode: "0755"
+
+    # ── Render .env from template ────────────────────────
+    - name: Render .env file
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../../docker/int/.env.tpl"
+        dest: /opt/mini-aliexpress/.env
+        owner: azureuser
+        group: azureuser
+        mode: "0600"
+
+    # ── Docker Hub login (optional, for private images) ──
+    - name: Docker Hub login
+      ansible.builtin.shell: |
+        docker login -u "{{ dockerhub_username }}" -p "{{ dockerhub_password }}"
+      when: dockerhub_password is defined and dockerhub_password | length > 0
+      no_log: true
+
+    # ── Pull latest images ───────────────────────────────
+    - name: Pull Docker images
+      ansible.builtin.shell: docker compose pull 2>&1
+      args:
+        chdir: /opt/mini-aliexpress
+
+    # ── Reset Keycloak DB so realm-export is re-imported ─
+    - name: Drop Keycloak database (forces realm re-import)
+      ansible.builtin.shell: |
+        docker compose exec -T postgres psql -U "${POSTGRES_USER:-aliexpress}" -d postgres \
+          -c "DROP DATABASE IF EXISTS keycloak;" \
+          -c "CREATE DATABASE keycloak;" 2>&1
+      args:
+        chdir: /opt/mini-aliexpress
+      ignore_errors: true
+
+    # ── Start services ───────────────────────────────────
+    - name: Start services
+      block:
+        - name: Docker compose up
+          ansible.builtin.shell: docker compose up -d --force-recreate --remove-orphans 2>&1
+          args:
+            chdir: /opt/mini-aliexpress
+          register: compose_up
+
+      rescue:
+        - name: Show docker compose output
+          ansible.builtin.debug:
+            var: compose_up
+
+        - name: Show container status
+          ansible.builtin.shell: docker compose ps -a 2>&1
+          args:
+            chdir: /opt/mini-aliexpress
+          register: compose_ps
+
+        - name: Print container status
+          ansible.builtin.debug:
+            var: compose_ps.stdout_lines
+
+        - name: Show failing container logs
+          ansible.builtin.shell: docker compose logs --tail=50 2>&1
+          args:
+            chdir: /opt/mini-aliexpress
+          register: compose_logs
+
+        - name: Print container logs
+          ansible.builtin.debug:
+            var: compose_logs.stdout_lines
+
+        - name: Fail with context
+          ansible.builtin.fail:
+            msg: "docker compose up failed — see container status and logs above"
+
+    # ── Health check ─────────────────────────────────────
+    - name: Wait for backend health check
+      ansible.builtin.uri:
+        url: "http://localhost:8080/api/actuator/health"
+        status_code: 200
+      register: health_result
+      until: health_result.status == 200
+      retries: 30
+      delay: 10

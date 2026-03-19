@@ -12,7 +12,7 @@ variable "project" {
 variable "location" {
   description = "Azure region"
   type        = string
-  default     = "francecentral"
+  default     = "westeurope"
 }
 
 variable "postgresql_admin_password" {

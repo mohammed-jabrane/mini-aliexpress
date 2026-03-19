@@ -12,7 +12,7 @@ variable "project" {
 variable "location" {
   description = "Azure region"
   type        = string
-  default     = "francecentral"
+  default     = "westeurope"
 }
 
 variable "kubernetes_version" {

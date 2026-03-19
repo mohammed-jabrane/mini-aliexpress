@@ -34,8 +34,8 @@
       "directAccessGrantsEnabled": true,
       "standardFlowEnabled": true,
       "serviceAccountsEnabled": true,
-      "redirectUris": ["http://localhost:8080/*"],
-      "webOrigins": ["http://localhost:8080"]
+      "redirectUris": ["http://localhost:8080/*", "http://*.westeurope.cloudapp.azure.com/*", "https://*.westeurope.cloudapp.azure.com/*"],
+      "webOrigins": ["http://localhost:8080", "http://*.westeurope.cloudapp.azure.com", "https://*.westeurope.cloudapp.azure.com"]
     },
     {
       "clientId": "mini-aliexpress-frontend",
@@ -44,8 +44,8 @@
       "publicClient": true,
       "directAccessGrantsEnabled": true,
       "standardFlowEnabled": true,
-      "redirectUris": ["http://localhost:4200/*", "http://localhost:8080/*"],
-      "webOrigins": ["http://localhost:4200", "http://localhost:8080"]
+      "redirectUris": ["http://localhost:4200/*", "http://localhost:8080/*", "http://*.westeurope.cloudapp.azure.com/*", "https://*.westeurope.cloudapp.azure.com/*"],
+      "webOrigins": ["http://localhost:4200", "http://localhost:8080", "http://*.westeurope.cloudapp.azure.com", "https://*.westeurope.cloudapp.azure.com"]
     }
   ],
   "users": [

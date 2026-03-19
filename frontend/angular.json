@@ -90,6 +90,27 @@
                   "with": "src/environments/environment.azure.ts"
                 }
               ]
+            },
+            "azure-int": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kB",
+                  "maximumError": "4kB"
+                }
+              ],
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.azure-int.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -111,6 +132,9 @@
             },
             "azure": {
               "buildTarget": "frontend:build:azure"
+            },
+            "azure-int": {
+              "buildTarget": "frontend:build:azure-int"
             }
           },
           "defaultConfiguration": "development"

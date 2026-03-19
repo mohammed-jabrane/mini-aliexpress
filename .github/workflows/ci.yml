@@ -155,12 +155,11 @@ jobs:
           fi
           echo "All checks passed"
 
-  # ─── Docker Push (push only — runs after build/tests pass) ─────────
+  # ─── Docker Push (push only — CI already passed on PR before merge) ─
   docker-push:
     name: Docker — Build & Push Images
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-    needs: [backend-build, frontend-build]
     steps:
       - uses: actions/checkout@v6
 
@@ -192,3 +191,11 @@ jobs:
             -t ${{ secrets.DOCKERHUB_USERNAME }}/mini-aliexpress-frontend:${{ steps.tag.outputs.image_tag }} \
             frontend/
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/mini-aliexpress-frontend:${{ steps.tag.outputs.image_tag }}
+
+      - name: Build & push frontend image (INT)
+        run: |
+          docker build \
+            --build-arg NG_CONFIG=azure-int \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/mini-aliexpress-frontend:${{ steps.tag.outputs.image_tag }}-int \
+            frontend/
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mini-aliexpress-frontend:${{ steps.tag.outputs.image_tag }}-int

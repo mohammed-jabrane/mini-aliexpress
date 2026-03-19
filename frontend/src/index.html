@@ -6,6 +6,18 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    // Polyfill crypto.randomUUID for insecure contexts (HTTP).
+    // crypto.getRandomValues IS available on HTTP; randomUUID is not.
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'undefined') {
+      crypto.randomUUID = function () {
+        return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, function (c) {
+          var r = crypto.getRandomValues(new Uint8Array(1))[0];
+          return (c ^ (r & (15 >> (c / 4)))).toString(16);
+        });
+      };
+    }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>

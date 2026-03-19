@@ -1,6 +1,6 @@
 subscription_id           = "CHANGE_ME"
 project                   = "mini-aliexpress"
-location                  = "francecentral"
+location                  = "westeurope"
 postgresql_admin_password = "CHANGE_ME"
 keycloak_admin_password   = "CHANGE_ME"
 ssh_public_key            = "CHANGE_ME"
