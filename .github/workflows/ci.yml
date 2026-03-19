@@ -12,10 +12,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ─── Backend ──────────────────────────────────────────────
+  # ─── Backend (PR only) ──────────────────────────────────
   backend-build:
     name: Backend — Build & Unit Tests
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     defaults:
       run:
         working-directory: backend
@@ -50,10 +51,11 @@ jobs:
           path: backend/target/site/jacoco/
           retention-days: 7
 
-  # ─── Frontend ─────────────────────────────────────────────
+  # ─── Frontend (PR only) ─────────────────────────────────
   frontend-build:
     name: Frontend — Build & Unit Tests
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     defaults:
       run:
         working-directory: frontend
@@ -84,10 +86,11 @@ jobs:
           path: frontend/coverage/
           retention-days: 7
 
-  # ─── SonarCloud (monorepo) ────────────────────────────────
+  # ─── SonarCloud (PR only) ───────────────────────────────
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     needs: [backend-build, frontend-build]
     steps:
       - uses: actions/checkout@v6
@@ -129,11 +132,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           JAVA_HOME: ${{ env.JAVA_HOME }}
 
-  # ─── Quality Gate ─────────────────────────────────────────
+  # ─── Quality Gate (PR only — blocks merge if failed) ────
   ci-passed:
     name: CI Quality Gate
     runs-on: ubuntu-latest
-    if: always()
+    if: always() && github.event_name == 'pull_request'
     needs: [backend-build, frontend-build, sonarcloud]
     steps:
       - name: Check all jobs passed
@@ -152,12 +155,11 @@ jobs:
           fi
           echo "All checks passed"
 
-  # ─── Docker Push (main merge or tag) ─────────────────────
+  # ─── Docker Push (push to main or tag — CI already passed on PR) ───
   docker-push:
     name: Docker — Build & Push Images
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-    needs: ci-passed
     steps:
       - uses: actions/checkout@v6
 
