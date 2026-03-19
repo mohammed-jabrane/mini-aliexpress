@@ -31,17 +31,17 @@
 
 - [x] Create a new structure of .md based on best practice
 
-### Frontend Setup (FA05)
+### Frontend Setup (FA03)
 
-- [ ] Install NgRx (`@ngrx/store`, `@ngrx/effects`, `@ngrx/store-devtools`, `@ngrx/entity`)
-- [ ] Install `keycloak-angular` + `keycloak-js`
-- [ ] Install Cypress (`cypress`)
-- [ ] Configure `HttpClient` provider in `app.config.ts`
-- [ ] Configure NgRx providers in `app.config.ts`
-- [ ] Configure Keycloak initialization (APP_INITIALIZER)
-- [ ] Configure environment files (`environment.ts`, `environment.local-k8s.ts`, `environment.azure.ts`)
-- [ ] Create Dockerfile (nginx + Angular build)
-- [ ] Configure proxy (`proxy.conf.json`) for local dev
+- [x] Install NgRx (`@ngrx/store`, `@ngrx/effects`, `@ngrx/store-devtools`, `@ngrx/entity`)
+- [x] Install `keycloak-angular` + `keycloak-js`
+- [x] Install Cypress (`cypress`)
+- [x] Configure `HttpClient` provider in `app.config.ts`
+- [x] Configure NgRx providers in `app.config.ts`
+- [x] Configure Keycloak initialization (APP_INITIALIZER)
+- [x] Configure environment files (`environment.ts`, `environment.local-k8s.ts`, `environment.azure.ts`)
+- [x] Create Dockerfile (nginx + Angular build)
+- [x] Configure proxy (`proxy.conf.json`) for local dev
 
 ---
 

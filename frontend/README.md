@@ -4,15 +4,15 @@
 
 ## Tech Stack
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Angular | 18 | SPA framework (standalone components) |
-| TypeScript | 5.5 | Language |
-| NgRx | - | Reactive state management (Store, Effects, Selectors) |
-| Angular Signals | - | Fine-grained reactivity |
-| Lazy Loading | - | Route-level code splitting |
-| Mappers | - | DTO-to-Model transformation layer |
-| RxJS | 7.8 | Reactive programming |
+| Technology      | Version | Purpose                                               |
+|-----------------|---------|-------------------------------------------------------|
+| Angular         | 18      | SPA framework (standalone components)                 |
+| TypeScript      | 5.5     | Language                                              |
+| NgRx            | -       | Reactive state management (Store, Effects, Selectors) |
+| Angular Signals | -       | Fine-grained reactivity                               |
+| Lazy Loading    | -       | Route-level code splitting                            |
+| Mappers         | -       | DTO-to-Model transformation layer                     |
+| RxJS            | 7.8     | Reactive programming                                  |
 
 ## Architecture
 
@@ -39,15 +39,15 @@ The dev server starts at http://localhost:4200. Requires backend running (see [D
 
 ## Planned Dependencies
 
-| Package | Purpose |
-|---------|---------|
-| `@ngrx/store` | Global state management |
-| `@ngrx/effects` | Side effects (API calls) |
-| `@ngrx/store-devtools` | Redux DevTools integration |
-| `@ngrx/entity` | Entity collection management |
-| `keycloak-angular` | Keycloak integration for Angular |
-| `keycloak-js` | Keycloak JavaScript adapter |
-| `cypress` | E2E testing |
+| Package                | Purpose                          |
+|------------------------|----------------------------------|
+| `@ngrx/store`          | Global state management          |
+| `@ngrx/effects`        | Side effects (API calls)         |
+| `@ngrx/store-devtools` | Redux DevTools integration       |
+| `@ngrx/entity`         | Entity collection management     |
+| `keycloak-angular`     | Keycloak integration for Angular |
+| `keycloak-js`          | Keycloak JavaScript adapter      |
+| `cypress`              | E2E testing                      |
 
 ---
 
@@ -57,15 +57,15 @@ The dev server starts at http://localhost:4200. Requires backend running (see [D
 
 Isolated tests for Angular components, services, NgRx reducers, effects, selectors, and mappers.
 
-| Target | What is tested | Tools |
-|--------|---------------|-------|
-| Components | Rendering, user interactions, inputs/outputs | `TestBed`, `ComponentFixture` |
-| Services | HTTP calls, business logic | `HttpClientTestingModule` |
-| NgRx Reducers | State transitions | Direct function calls |
-| NgRx Effects | Side effects, API calls | `provideMockActions`, `jasmine-marbles` |
-| NgRx Selectors | Memoized state queries | `projector()` method |
-| Mappers | DTO <-> Model transformations | Direct function calls |
-| Pipes | Value formatting | Direct instantiation |
+| Target         | What is tested                               | Tools                                   |
+|----------------|----------------------------------------------|-----------------------------------------|
+| Components     | Rendering, user interactions, inputs/outputs | `TestBed`, `ComponentFixture`           |
+| Services       | HTTP calls, business logic                   | `HttpClientTestingModule`               |
+| NgRx Reducers  | State transitions                            | Direct function calls                   |
+| NgRx Effects   | Side effects, API calls                      | `provideMockActions`, `jasmine-marbles` |
+| NgRx Selectors | Memoized state queries                       | `projector()` method                    |
+| Mappers        | DTO <-> Model transformations                | Direct function calls                   |
+| Pipes          | Value formatting                             | Direct instantiation                    |
 
 ```bash
 # Watch mode
@@ -103,12 +103,12 @@ Uses ESLint + Prettier for code consistency enforcement.
 
 ### Other Quality
 
-| Test type | Tool | Purpose |
-|-----------|------|---------|
-| API Contract Testing | Pact | Verify API contracts with backend |
-| Accessibility Testing | axe-core, Pa11y | WCAG compliance |
-| Visual Regression | Cypress + Percy | Detect unintended UI changes |
-| Linting & Formatting | ESLint, Prettier | Code consistency |
+| Test type             | Tool             | Purpose                           |
+|-----------------------|------------------|-----------------------------------|
+| API Contract Testing  | Pact             | Verify API contracts with backend |
+| Accessibility Testing | axe-core, Pa11y  | WCAG compliance                   |
+| Visual Regression     | Cypress + Percy  | Detect unintended UI changes      |
+| Linting & Formatting  | ESLint, Prettier | Code consistency                  |
 
 ### Makefile Shortcuts
 
