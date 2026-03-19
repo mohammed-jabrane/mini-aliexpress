@@ -1,0 +1,155 @@
+name: Deploy INT
+
+on:
+  workflow_dispatch:
+    inputs:
+      subscription_id:
+        description: "Azure subscription ID"
+        required: true
+        type: string
+      location:
+        description: "Azure region"
+        required: false
+        type: string
+        default: "francecentral"
+
+concurrency:
+  group: deploy-int
+  cancel-in-progress: false
+
+jobs:
+  # ─── Job 1: Packer Build ─────────────────────────────────
+  packer-build:
+    name: Packer — Build VM Image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@v3
+
+      - name: Ensure Packer resource group exists
+        run: |
+          az group create \
+            --name mini-aliexpress-packer-rg \
+            --location ${{ inputs.location }} \
+            --tags project=mini-aliexpress managed_by=packer
+
+      - name: Packer Init
+        working-directory: infra/packer
+        run: packer init .
+
+      - name: Packer Build
+        working-directory: infra/packer
+        run: |
+          packer build \
+            -var "subscription_id=${{ inputs.subscription_id }}" \
+            -var "client_id=${{ secrets.ARM_CLIENT_ID }}" \
+            -var "client_secret=${{ secrets.ARM_CLIENT_SECRET }}" \
+            -var "tenant_id=${{ secrets.ARM_TENANT_ID }}" \
+            -var "location=${{ inputs.location }}" \
+            -var-file=variables.pkrvars.hcl \
+            .
+
+  # ─── Job 2: Terraform Apply ──────────────────────────────
+  terraform-apply:
+    name: Terraform — Provision Infrastructure
+    runs-on: ubuntu-latest
+    needs: packer-build
+    outputs:
+      vm_public_ip: ${{ steps.tf-output.outputs.vm_public_ip }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        working-directory: infra/terraform/environments/azure-int
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ inputs.subscription_id }}
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: infra/terraform/environments/azure-int
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ inputs.subscription_id }}
+        run: |
+          terraform apply -auto-approve \
+            -var "subscription_id=${{ inputs.subscription_id }}" \
+            -var "location=${{ inputs.location }}" \
+            -var "ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}" \
+            -var "postgres_password=${{ secrets.INT_POSTGRES_PASSWORD }}" \
+            -var "keycloak_admin_password=${{ secrets.INT_KEYCLOAK_ADMIN_PASSWORD }}" \
+            -var "minio_root_password=${{ secrets.INT_MINIO_ROOT_PASSWORD }}"
+
+      - name: Capture Terraform outputs
+        id: tf-output
+        working-directory: infra/terraform/environments/azure-int
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ inputs.subscription_id }}
+        run: |
+          echo "vm_public_ip=$(terraform output -raw vm_public_ip)" >> "$GITHUB_OUTPUT"
+
+  # ─── Job 3: Ansible Deploy ──────────────────────────────
+  ansible-deploy:
+    name: Ansible — Configure & Deploy
+    runs-on: ubuntu-latest
+    needs: terraform-apply
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Ansible
+        run: pip install ansible
+
+      - name: Write SSH private key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/int_key
+          chmod 600 ~/.ssh/int_key
+          ssh-keyscan -H ${{ needs.terraform-apply.outputs.vm_public_ip }} >> ~/.ssh/known_hosts
+
+      - name: Generate Ansible inventory
+        run: |
+          cat > infra/ansible/inventory/azure-int.yml << 'EOF'
+          all:
+            hosts:
+              int-vm:
+                ansible_host: ${{ needs.terraform-apply.outputs.vm_public_ip }}
+                ansible_user: azureuser
+                ansible_ssh_private_key_file: ~/.ssh/int_key
+          EOF
+
+      - name: Run Ansible playbook
+        run: |
+          ansible-playbook \
+            -i infra/ansible/inventory/azure-int.yml \
+            infra/ansible/playbooks/deploy-int.yml \
+            -e "dockerhub_username=${{ secrets.DOCKERHUB_USERNAME }}" \
+            -e "dockerhub_token=${{ secrets.DOCKERHUB_TOKEN }}" \
+            -e "vm_public_ip=${{ needs.terraform-apply.outputs.vm_public_ip }}" \
+            -e "postgres_password=${{ secrets.INT_POSTGRES_PASSWORD }}" \
+            -e "keycloak_admin_password=${{ secrets.INT_KEYCLOAK_ADMIN_PASSWORD }}" \
+            -e "minio_root_password=${{ secrets.INT_MINIO_ROOT_PASSWORD }}" \
+            -e "image_tag=${{ github.sha }}"

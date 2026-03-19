@@ -1,0 +1,108 @@
+---
+- name: Deploy INT environment
+  hosts: all
+  become: true
+
+  vars:
+    app_dir: /opt/mini-aliexpress
+    compose_src: "{{ playbook_dir }}/../../../docker/int"
+    config_src: "{{ playbook_dir }}/../../../docker/local/config"
+
+  tasks:
+    # ── Prepare directories ──────────────────────────────
+    - name: Create application directory
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: azureuser
+        group: azureuser
+        mode: "0755"
+
+    - name: Create config subdirectories
+      ansible.builtin.file:
+        path: "{{ app_dir }}/config/{{ item }}"
+        state: directory
+        owner: azureuser
+        group: azureuser
+        mode: "0755"
+      loop:
+        - postgres
+        - keycloak
+        - minio/seed-images
+
+    # ── Copy compose file ────────────────────────────────
+    - name: Copy docker-compose.yml
+      ansible.builtin.copy:
+        src: "{{ compose_src }}/docker-compose.yml"
+        dest: "{{ app_dir }}/docker-compose.yml"
+        owner: azureuser
+        group: azureuser
+        mode: "0644"
+
+    # ── Copy config files from local ─────────────────────
+    - name: Copy PostgreSQL init script
+      ansible.builtin.copy:
+        src: "{{ config_src }}/postgres/init.sql"
+        dest: "{{ app_dir }}/config/postgres/init.sql"
+        owner: azureuser
+        group: azureuser
+        mode: "0644"
+
+    - name: Copy Keycloak realm export
+      ansible.builtin.copy:
+        src: "{{ config_src }}/keycloak/realm-export.json"
+        dest: "{{ app_dir }}/config/keycloak/realm-export.json"
+        owner: azureuser
+        group: azureuser
+        mode: "0644"
+
+    - name: Copy Minio seed images
+      ansible.builtin.copy:
+        src: "{{ config_src }}/minio/seed-images/"
+        dest: "{{ app_dir }}/config/minio/seed-images/"
+        owner: azureuser
+        group: azureuser
+        mode: "0644"
+
+    # ── Render .env from template ────────────────────────
+    - name: Render .env file
+      ansible.builtin.template:
+        src: "{{ compose_src }}/.env.tpl"
+        dest: "{{ app_dir }}/.env"
+        owner: azureuser
+        group: azureuser
+        mode: "0600"
+
+    # ── Docker Hub login ────────────────────────────────
+    - name: Login to Docker Hub
+      ansible.builtin.command:
+        cmd: docker login -u {{ dockerhub_username }} -p {{ dockerhub_token }}
+      become_user: azureuser
+      changed_when: true
+      no_log: true
+
+    # ── Pull latest images ───────────────────────────────
+    - name: Pull Docker images
+      ansible.builtin.command:
+        cmd: docker compose pull
+        chdir: "{{ app_dir }}"
+      become_user: azureuser
+      changed_when: true
+
+    # ── Start services ───────────────────────────────────
+    - name: Start services with Docker Compose
+      ansible.builtin.command:
+        cmd: docker compose up -d --remove-orphans
+        chdir: "{{ app_dir }}"
+      become_user: azureuser
+      changed_when: true
+
+    # ── Health check ─────────────────────────────────────
+    - name: Wait for backend health check
+      ansible.builtin.uri:
+        url: "http://localhost:8080/api/actuator/health"
+        status_code: 200
+      register: health
+      retries: 30
+      delay: 10
+      until: health.status == 200
