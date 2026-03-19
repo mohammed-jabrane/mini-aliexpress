@@ -1,0 +1,97 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-seed-categories
+      author: mini-aliexpress
+      context: seed
+      changes:
+        # Top-level categories
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "a0000000-0000-0000-0000-000000000001" }
+              - column: { name: name, value: "Electronics" }
+              - column: { name: parent_id, value: null }
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "a0000000-0000-0000-0000-000000000002" }
+              - column: { name: name, value: "Clothing" }
+              - column: { name: parent_id, value: null }
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "a0000000-0000-0000-0000-000000000003" }
+              - column: { name: name, value: "Home & Garden" }
+              - column: { name: parent_id, value: null }
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "a0000000-0000-0000-0000-000000000004" }
+              - column: { name: name, value: "Sports & Outdoors" }
+              - column: { name: parent_id, value: null }
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "a0000000-0000-0000-0000-000000000005" }
+              - column: { name: name, value: "Toys & Games" }
+              - column: { name: parent_id, value: null }
+
+        # Electronics subcategories
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "b0000000-0000-0000-0000-000000000001" }
+              - column: { name: name, value: "Smartphones" }
+              - column: { name: parent_id, value: "a0000000-0000-0000-0000-000000000001" }
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "b0000000-0000-0000-0000-000000000002" }
+              - column: { name: name, value: "Laptops" }
+              - column: { name: parent_id, value: "a0000000-0000-0000-0000-000000000001" }
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "b0000000-0000-0000-0000-000000000003" }
+              - column: { name: name, value: "Audio" }
+              - column: { name: parent_id, value: "a0000000-0000-0000-0000-000000000001" }
+
+        # Clothing subcategories
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "b0000000-0000-0000-0000-000000000004" }
+              - column: { name: name, value: "Men" }
+              - column: { name: parent_id, value: "a0000000-0000-0000-0000-000000000002" }
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "b0000000-0000-0000-0000-000000000005" }
+              - column: { name: name, value: "Women" }
+              - column: { name: parent_id, value: "a0000000-0000-0000-0000-000000000002" }
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "b0000000-0000-0000-0000-000000000006" }
+              - column: { name: name, value: "Kids" }
+              - column: { name: parent_id, value: "a0000000-0000-0000-0000-000000000002" }
+
+        # Home & Garden subcategories
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "b0000000-0000-0000-0000-000000000007" }
+              - column: { name: name, value: "Furniture" }
+              - column: { name: parent_id, value: "a0000000-0000-0000-0000-000000000003" }
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "b0000000-0000-0000-0000-000000000008" }
+              - column: { name: name, value: "Kitchen" }
+              - column: { name: parent_id, value: "a0000000-0000-0000-0000-000000000003" }
+        - insert:
+            tableName: category
+            columns:
+              - column: { name: id, value: "b0000000-0000-0000-0000-000000000009" }
+              - column: { name: name, value: "Decor" }
+              - column: { name: parent_id, value: "a0000000-0000-0000-0000-000000000003" }

@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-product-table
+      author: mini-aliexpress
+      changes:
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: price
+                  type: decimal(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stock
+                  type: int
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: uuid
+                  constraints:
+                    nullable: true
+              - column:
+                  name: seller_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: images
+                  type: jsonb
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: product
+            baseColumnNames: category_id
+            referencedTableName: category
+            referencedColumnNames: id
+            constraintName: fk_product_category
+
+        - createIndex:
+            tableName: product
+            indexName: idx_product_category_id
+            columns:
+              - column:
+                  name: category_id
+
+        - createIndex:
+            tableName: product
+            indexName: idx_product_seller_id
+            columns:
+              - column:
+                  name: seller_id
+
+        - createIndex:
+            tableName: product
+            indexName: idx_product_name
+            columns:
+              - column:
+                  name: name
+
+        - sql:
+            sql: ALTER TABLE product ADD CONSTRAINT chk_product_price CHECK (price >= 0);
+
+        - sql:
+            sql: ALTER TABLE product ADD CONSTRAINT chk_product_stock CHECK (stock >= 0);
