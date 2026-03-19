@@ -25,9 +25,13 @@
 - [x] Create `application-azure-services.yaml`
 - [x] Create Dockerfile (multi-stage build)
 - [x] Add plugin for run local (docker-compose, frontend, backend)
-- [x] Add configuration for IntelliJ mode for run all 
+- [x] Add configuration for IntelliJ mode for run all
 
-### Frontend Setup (FA03)
+### Upgrade .md structure for more details (FA04)
+
+- [x] Create a new structure of .md based on best practice
+
+### Frontend Setup (FA05)
 
 - [ ] Install NgRx (`@ngrx/store`, `@ngrx/effects`, `@ngrx/store-devtools`, `@ngrx/entity`)
 - [ ] Install `keycloak-angular` + `keycloak-js`
@@ -472,8 +476,8 @@
 - [x] Document tech stack, architecture, profiles
 - [x] Document functional features
 - [x] Document testing strategy
-- [ ] Create `CONTRIBUTING.md` (coding standards, PR process)
+- [x] Create `CONTRIBUTING.md` (coding standards, PR process)
 - [ ] Create API documentation via Swagger annotations on controllers
-- [ ] Document Keycloak realm setup & roles
+- [x] Document Keycloak realm setup & roles
 - [ ] Document Kafka topics & event schemas
-- [ ] Create architecture decision records (ADR) if needed
+- [x] Create architecture decision records (ADR) if needed
