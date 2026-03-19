@@ -3,3 +3,27 @@ html, body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.snackbar-success {
+  --mdc-snackbar-container-color: #2e7d32;
+  --mdc-snackbar-supporting-text-color: #fff;
+  --mat-snack-bar-button-color: #c8e6c9;
+}
+
+.snackbar-error {
+  --mdc-snackbar-container-color: #c62828;
+  --mdc-snackbar-supporting-text-color: #fff;
+  --mat-snack-bar-button-color: #ffcdd2;
+}
+
+.snackbar-info {
+  --mdc-snackbar-container-color: #1565c0;
+  --mdc-snackbar-supporting-text-color: #fff;
+  --mat-snack-bar-button-color: #bbdefb;
+}
+
+.snackbar-warn {
+  --mdc-snackbar-container-color: #e65100;
+  --mdc-snackbar-supporting-text-color: #fff;
+  --mat-snack-bar-button-color: #ffe0b2;
+}

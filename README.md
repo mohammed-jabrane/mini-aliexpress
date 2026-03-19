@@ -25,9 +25,11 @@ A full-stack e-commerce platform inspired by AliExpress, built as a mini project
 | Technology | Version | Purpose |
 |---|---|---|
 | Angular | 18 | SPA framework (standalone components) |
+| Angular Material | 18 | UI component library (toolbar, snackbar, dialogs) |
 | TypeScript | 5.5 | Language |
 | NgRx | - | Reactive state management (Store, Effects, Selectors) |
-| Angular Signals | - | Fine-grained reactivity |
+| Angular Signals | - | Fine-grained reactivity (auth state, component state) |
+| Keycloak Angular | 16 | OAuth2/OIDC integration (SSO, bearer interceptor) |
 | Lazy Loading | - | Route-level code splitting |
 | Mappers | - | DTO-to-Model transformation layer |
 | RxJS | 7.8 | Reactive programming |
@@ -202,6 +204,12 @@ mini-aliexpress/
 │
 ├── frontend/                             # Angular 18 (Standalone Components)
 │   ├── src/app/                          #   Application source code
+│   │   ├── core/                         #     Singleton services, guards, interceptors
+│   │   │   ├── auth/                     #       Keycloak init, AuthKeycloakService, guards
+│   │   │   ├── interceptors/             #       Auth (401/403) & error HTTP interceptors
+│   │   │   └── services/                 #       NotificationService (MatSnackBar wrapper)
+│   │   ├── shared/                       #     Reusable components, pipes, mappers
+│   │   └── features/                     #     Lazy-loaded feature modules
 │   ├── Dockerfile                        #   Multi-stage build (Node + Nginx)
 │   ├── angular.json
 │   ├── package.json

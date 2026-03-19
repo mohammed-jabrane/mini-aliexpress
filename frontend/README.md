@@ -4,22 +4,35 @@
 
 ## Tech Stack
 
-| Technology      | Version | Purpose                                               |
-|-----------------|---------|-------------------------------------------------------|
-| Angular         | 18      | SPA framework (standalone components)                 |
-| TypeScript      | 5.5     | Language                                              |
-| NgRx            | -       | Reactive state management (Store, Effects, Selectors) |
-| Angular Signals | -       | Fine-grained reactivity                               |
-| Lazy Loading    | -       | Route-level code splitting                            |
-| Mappers         | -       | DTO-to-Model transformation layer                     |
-| RxJS            | 7.8     | Reactive programming                                  |
+| Technology       | Version | Purpose                                               |
+|------------------|---------|-------------------------------------------------------|
+| Angular          | 18      | SPA framework (standalone components)                 |
+| Angular Material | 18      | UI component library (toolbar, snackbar, dialogs)     |
+| TypeScript       | 5.5     | Language                                              |
+| NgRx             | -       | Reactive state management (Store, Effects, Selectors) |
+| Angular Signals  | -       | Fine-grained reactivity                               |
+| Keycloak Angular | 16      | OAuth2/OIDC integration (SSO, bearer interceptor)     |
+| Lazy Loading     | -       | Route-level code splitting                            |
+| Mappers          | -       | DTO-to-Model transformation layer                     |
+| RxJS             | 7.8     | Reactive programming                                  |
 
 ## Architecture
 
 The frontend follows a **feature-based modular architecture**. See [docs/architecture.md](../docs/architecture.md) for full details.
 
 ```
-core/      → Singleton services, guards, interceptors (auth, HTTP)
+core/
+  auth/
+    keycloak.init.ts          → APP_INITIALIZER (check-sso, bearer config)
+    keycloak.service.ts       → AuthKeycloakService (signals: isAuthenticated, currentUsername, currentRoles)
+    auth.guard.ts             → CanActivateFn — redirect to Keycloak login if unauthenticated
+    role.guard.ts             → CanActivateFn — check route.data['roles'] (OR logic)
+  interceptors/
+    auth.interceptor.ts       → 401 → re-login, 403 → notification + redirect
+    error.interceptor.ts      → Maps HTTP errors to user-friendly snackbar messages
+  services/
+    notification.service.ts   → MatSnackBar wrapper (success, error, info, warn)
+
 shared/    → Reusable components, pipes, mappers
 features/  → Lazy-loaded feature modules (product, cart, order, user)
 store/     → NgRx global state (actions, reducers, effects, selectors)
@@ -37,17 +50,18 @@ npm install && ng serve
 
 The dev server starts at http://localhost:4200. Requires backend running (see [Deployment](../docs/deployment.md)).
 
-## Planned Dependencies
+## Dependencies
 
-| Package                | Purpose                          |
-|------------------------|----------------------------------|
-| `@ngrx/store`          | Global state management          |
-| `@ngrx/effects`        | Side effects (API calls)         |
-| `@ngrx/store-devtools` | Redux DevTools integration       |
-| `@ngrx/entity`         | Entity collection management     |
-| `keycloak-angular`     | Keycloak integration for Angular |
-| `keycloak-js`          | Keycloak JavaScript adapter      |
-| `cypress`              | E2E testing                      |
+| Package                | Status    | Purpose                                          |
+|------------------------|-----------|--------------------------------------------------|
+| `@angular/material`    | Installed | UI component library (toolbar, snackbar, menus)  |
+| `@ngrx/store`          | Installed | Global state management                          |
+| `@ngrx/effects`        | Installed | Side effects (API calls)                         |
+| `@ngrx/store-devtools` | Installed | Redux DevTools integration                       |
+| `@ngrx/entity`         | Installed | Entity collection management                     |
+| `keycloak-angular`     | Installed | Keycloak integration (bearer interceptor, SSO)   |
+| `keycloak-js`          | Installed | Keycloak JavaScript adapter                      |
+| `cypress`              | Planned   | E2E testing                                      |
 
 ---
 
