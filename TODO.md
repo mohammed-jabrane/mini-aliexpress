@@ -88,23 +88,23 @@
 - [x] Create `ProductPersistenceAdapter` + `CategoryPersistenceAdapter`
 - [x] Add MapStruct + lombok-mapstruct-binding dependencies to `pom.xml`
 
-### Category API — CRUD (FA11)
+### Category API — CRUD (FA12)
 
-- [ ] Create `CreateCategoryUseCase`
-- [ ] Create `GetCategoryByIdUseCase`
-- [ ] Create `GetAllCategoriesUseCase`
-- [ ] Create `GetCategoryTreeUseCase`
-- [ ] Create `UpdateCategoryUseCase`
-- [ ] Create `DeleteCategoryUseCase`
-- [ ] Create `CategoryNotFoundException`
-- [ ] Implement `CategoryService` (implements category use cases)
-- [ ] Create `CategoryRequestDTO` / `CategoryResponseDTO`
-- [ ] Create `CategoryMapper` (MapStruct, DTO <-> Domain)
-- [ ] Update `CategoryController` (add create, update, delete endpoints)
-- [ ] Update `CategoryPersistenceAdapter` (implement new use case ports)
-- [ ] Test `CategoryService` (mock `CategoryRepositoryPort`)
-- [ ] Test `CategoryMapper` (DTO <-> Domain)
-- [ ] Test `CategoryController` (`@WebMvcTest` + MockMvc)
+- [x] Create `CreateCategoryUseCase`
+- [x] Create `GetCategoryByIdUseCase`
+- [x] Create `GetAllCategoriesUseCase`
+- [x] Create `GetCategoryTreeUseCase`
+- [x] Create `UpdateCategoryUseCase`
+- [x] Create `DeleteCategoryUseCase`
+- [x] Create `CategoryNotFoundException`
+- [x] Implement `CategoryService` (implements category use cases)
+- [x] Create `CategoryRequestDTO` / `CategoryResponseDTO`
+- [x] Create `CategoryMapper` (MapStruct, DTO <-> Domain)
+- [x] Update `CategoryController` (add create, update, delete endpoints)
+- [x] Update `CategoryPersistenceAdapter` (implement new use case ports)
+- [x] Test `CategoryService` (mock `CategoryRepositoryPort`)
+- [x] Test `CategoryMapper` (DTO <-> Domain)
+- [x] Test `CategoryController` (`@WebMvcTest` + MockMvc)
 
 ### Cart API
 
@@ -353,13 +353,13 @@
 - [ ] Test `Product` domain model (validation, business rules)
 - [ ] Test `Order` domain model (status transitions)
 - [ ] Test `Cart` domain model (add/update/remove items, total calculation)
-- [ ] Test `ProductService` (mock `ProductRepositoryPort`)
+- [x] Test `ProductService` (mock `ProductRepositoryPort`)
 - [ ] Test `CartService` (mock `CartRepositoryPort`)
 - [ ] Test `OrderService` (mock `OrderRepositoryPort`, `OrderEventPublisherPort`)
-- [ ] Test `ProductMapper` (DTO <-> Domain)
+- [x] Test `ProductMapper` (DTO <-> Domain)
 - [ ] Test `CartMapper`
 - [ ] Test `OrderMapper`
-- [ ] Test `ProductController` (`@WebMvcTest` + MockMvc)
+- [x] Test `ProductController` (`@WebMvcTest` + MockMvc)
 - [ ] Test `CartController` (`@WebMvcTest` + MockMvc)
 - [ ] Test `OrderController` (`@WebMvcTest` + MockMvc)
 - [ ] Achieve > 80% code coverage on domain + application layers

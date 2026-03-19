@@ -5,11 +5,11 @@ import ma.mohammedjabrane.mini_aliexpress_backend.application.dto.ProductRequest
 import ma.mohammedjabrane.mini_aliexpress_backend.application.dto.ProductResponseDTO;
 import ma.mohammedjabrane.mini_aliexpress_backend.application.mapper.ProductMapper;
 import ma.mohammedjabrane.mini_aliexpress_backend.domain.model.Product;
-import ma.mohammedjabrane.mini_aliexpress_backend.domain.port.in.CreateProductUseCase;
-import ma.mohammedjabrane.mini_aliexpress_backend.domain.port.in.DeleteProductUseCase;
-import ma.mohammedjabrane.mini_aliexpress_backend.domain.port.in.GetProductByIdUseCase;
-import ma.mohammedjabrane.mini_aliexpress_backend.domain.port.in.SearchProductsUseCase;
-import ma.mohammedjabrane.mini_aliexpress_backend.domain.port.in.UpdateProductUseCase;
+import ma.mohammedjabrane.mini_aliexpress_backend.domain.port.in.product.CreateProductUseCase;
+import ma.mohammedjabrane.mini_aliexpress_backend.domain.port.in.product.DeleteProductUseCase;
+import ma.mohammedjabrane.mini_aliexpress_backend.domain.port.in.product.GetProductByIdUseCase;
+import ma.mohammedjabrane.mini_aliexpress_backend.domain.port.in.product.SearchProductsUseCase;
+import ma.mohammedjabrane.mini_aliexpress_backend.domain.port.in.product.UpdateProductUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
