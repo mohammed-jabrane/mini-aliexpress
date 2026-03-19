@@ -31,27 +31,72 @@
 
 - [x] Create a new structure of .md based on best practice
 
-### Frontend Setup (FA05)
+### Frontend Setup (FA03)
 
-- [ ] Install NgRx (`@ngrx/store`, `@ngrx/effects`, `@ngrx/store-devtools`, `@ngrx/entity`)
-- [ ] Install `keycloak-angular` + `keycloak-js`
-- [ ] Install Cypress (`cypress`)
-- [ ] Configure `HttpClient` provider in `app.config.ts`
-- [ ] Configure NgRx providers in `app.config.ts`
-- [ ] Configure Keycloak initialization (APP_INITIALIZER)
-- [ ] Configure environment files (`environment.ts`, `environment.local-k8s.ts`, `environment.azure.ts`)
-- [ ] Create Dockerfile (nginx + Angular build)
-- [ ] Configure proxy (`proxy.conf.json`) for local dev
+- [x] Install NgRx (`@ngrx/store`, `@ngrx/effects`, `@ngrx/store-devtools`, `@ngrx/entity`)
+- [x] Install `keycloak-angular` + `keycloak-js`
+- [x] Install Cypress (`cypress`)
+- [x] Configure `HttpClient` provider in `app.config.ts`
+- [x] Configure NgRx providers in `app.config.ts`
+- [x] Configure Keycloak initialization (APP_INITIALIZER)
+- [x] Configure environment files (`environment.ts`, `environment.local-k8s.ts`, `environment.azure.ts`)
+- [x] Create Dockerfile (nginx + Angular build)
+- [x] Configure proxy (`proxy.conf.json`) for local dev
 
 ---
 
 ## 2. Backend — Hexagonal Architecture
 
-### Domain Layer
+### Liquibase Migrations (FA05)
 
+- [x] Create `db/changelog/db.changelog-master.yaml`
+- [x] Create changeset: `001-create-category-table`
+- [x] Create changeset: `002-create-product-table`
+- [x] Create changeset: `003-create-cart-tables`
+- [x] Create changeset: `004-create-order-tables`
+- [x] Create changeset: `005-create-address-table`
+- [x] Create changeset: `006-seed-categories`
+- [x] Create changeset: `007-seed-sample-products`
+
+### Create API Process for Product (FA06)
 - [ ] Create package `domain.model`
 - [ ] Create entity `Product` (id, name, description, price, stock, category, sellerId, images, createdAt, updatedAt)
 - [ ] Create entity `Category` (id, name, parentId)
+
+- [ ] Create package `domain.port.in` (input ports / use cases)
+- [ ] Create `CreateProductUseCase`
+- [ ] Create `SearchProductsUseCase`
+- [ ] Create `GetProductByIdUseCase`
+- [ ] Create `UpdateProductUseCase`
+- [ ] Create `DeleteProductUseCase`
+
+- [ ] Create package `domain.port.out` (output ports)
+- [ ] Create `ProductRepositoryPort`
+- [ ] Create `CategoryRepositoryPort`
+
+- [ ] Create package `domain.exception`
+- [ ] Create `ProductNotFoundException`
+
+- [ ] Create package `application.service`
+- [ ] Implement `ProductService` (implements product use cases)
+
+- [ ] Create package `application.dto`
+- [ ] Create `ProductRequestDTO` / `ProductResponseDTO`
+- [ ] Create `CategoryDTO`
+
+- [ ] Create package `application.mapper`
+- [ ] Create `ProductMapper` (DTO <-> Domain)
+
+- [ ] Create package `infrastructure.adapter.in.web`
+- [ ] Create `ProductController` (REST CRUD + search)
+- [ ] Create `CategoryController` (list, tree)
+
+- [ ] Create package `infrastructure.adapter.out.persistence`
+- [ ] Create `ProductJpaEntity` + `ProductJpaRepository`
+- [ ] Create `CategoryJpaEntity` + `CategoryJpaRepository`
+
+### Domain Layer
+
 - [ ] Create entity `Cart` (id, userId, items, createdAt)
 - [ ] Create entity `CartItem` (productId, quantity, unitPrice)
 - [ ] Create entity `Order` (id, userId, items, status, totalAmount, shippingAddress, createdAt)
@@ -61,12 +106,6 @@
 - [ ] Create entity `Address` (id, userId, street, city, zipCode, country)
 - [ ] Create value objects where appropriate (Money, ProductId, etc.)
 
-- [ ] Create package `domain.port.in` (input ports / use cases)
-- [ ] Create `CreateProductUseCase`
-- [ ] Create `SearchProductsUseCase`
-- [ ] Create `GetProductByIdUseCase`
-- [ ] Create `UpdateProductUseCase`
-- [ ] Create `DeleteProductUseCase`
 - [ ] Create `AddToCartUseCase`
 - [ ] Create `UpdateCartItemUseCase`
 - [ ] Create `RemoveFromCartUseCase`
@@ -77,47 +116,32 @@
 - [ ] Create `UpdateOrderStatusUseCase`
 - [ ] Create `UploadImageUseCase`
 
-- [ ] Create package `domain.port.out` (output ports)
-- [ ] Create `ProductRepositoryPort`
-- [ ] Create `CategoryRepositoryPort`
 - [ ] Create `CartRepositoryPort`
 - [ ] Create `OrderRepositoryPort`
 - [ ] Create `ImageStoragePort`
 - [ ] Create `OrderEventPublisherPort`
 
-- [ ] Create package `domain.exception`
-- [ ] Create `ProductNotFoundException`
 - [ ] Create `InsufficientStockException`
 - [ ] Create `OrderNotFoundException`
 - [ ] Create `UnauthorizedAccessException`
 
 ### Application Layer
 
-- [ ] Create package `application.service`
-- [ ] Implement `ProductService` (implements product use cases)
 - [ ] Implement `CartService` (implements cart use cases)
 - [ ] Implement `OrderService` (implements order use cases)
 - [ ] Implement `ImageService` (implements image use case)
 
-- [ ] Create package `application.dto`
-- [ ] Create `ProductRequestDTO` / `ProductResponseDTO`
-- [ ] Create `CategoryDTO`
 - [ ] Create `CartDTO` / `CartItemDTO`
 - [ ] Create `OrderRequestDTO` / `OrderResponseDTO`
 - [ ] Create `AddressDTO`
 - [ ] Create `PageResponseDTO<T>` (pagination wrapper)
 
-- [ ] Create package `application.mapper`
-- [ ] Create `ProductMapper` (DTO <-> Domain)
 - [ ] Create `CartMapper`
 - [ ] Create `OrderMapper`
 - [ ] Create `AddressMapper`
 
 ### Infrastructure Layer — Adapters IN (Web)
 
-- [ ] Create package `infrastructure.adapter.in.web`
-- [ ] Create `ProductController` (REST CRUD + search)
-- [ ] Create `CategoryController` (list, tree)
 - [ ] Create `CartController` (get, add, update, remove)
 - [ ] Create `OrderController` (place, get, list, update status)
 - [ ] Create `ImageController` (upload endpoint)
@@ -125,9 +149,6 @@
 
 ### Infrastructure Layer — Adapters OUT (Persistence)
 
-- [ ] Create package `infrastructure.adapter.out.persistence`
-- [ ] Create `ProductJpaEntity` + `ProductJpaRepository`
-- [ ] Create `CategoryJpaEntity` + `CategoryJpaRepository`
 - [ ] Create `CartJpaEntity` / `CartItemJpaEntity` + `CartJpaRepository`
 - [ ] Create `OrderJpaEntity` / `OrderItemJpaEntity` + `OrderJpaRepository`
 - [ ] Create `ProductPersistenceAdapter` (implements `ProductRepositoryPort`)
@@ -160,17 +181,6 @@
 - [ ] Create `infrastructure.config.storage.AzureBlobConfig`
 - [ ] Create `infrastructure.config.OpenApiConfig` (Swagger customization)
 - [ ] Create CORS configuration
-
-### Liquibase Migrations
-
-- [ ] Create `db/changelog/db.changelog-master.yaml`
-- [ ] Create changeset: `001-create-category-table`
-- [ ] Create changeset: `002-create-product-table`
-- [ ] Create changeset: `003-create-cart-tables`
-- [ ] Create changeset: `004-create-order-tables`
-- [ ] Create changeset: `005-create-address-table`
-- [ ] Create changeset: `006-seed-categories`
-- [ ] Create changeset: `007-seed-sample-products`
 
 ---
 

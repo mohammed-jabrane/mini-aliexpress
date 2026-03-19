@@ -1,0 +1,80 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-seed-sample-products
+      author: mini-aliexpress
+      context: seed
+      changes:
+        # Smartphone product
+        - insert:
+            tableName: product
+            columns:
+              - column: { name: id, value: "c0000000-0000-0000-0000-000000000001" }
+              - column: { name: name, value: "Wireless Bluetooth Earbuds Pro" }
+              - column: { name: description, value: "High-quality wireless earbuds with active noise cancellation, 30-hour battery life, and IPX5 water resistance." }
+              - column: { name: price, valueNumeric: 49.99 }
+              - column: { name: stock, valueNumeric: 250 }
+              - column: { name: category_id, value: "b0000000-0000-0000-0000-000000000003" }
+              - column: { name: seller_id, value: "d0000000-0000-0000-0000-000000000001" }
+              - column: { name: images, value: '["https://placehold.co/600x400?text=Earbuds+Front", "https://placehold.co/600x400?text=Earbuds+Case"]' }
+              - column: { name: created_at, valueDate: "2025-01-15T10:00:00" }
+              - column: { name: updated_at, valueDate: "2025-01-15T10:00:00" }
+
+        # Laptop product
+        - insert:
+            tableName: product
+            columns:
+              - column: { name: id, value: "c0000000-0000-0000-0000-000000000002" }
+              - column: { name: name, value: "Ultra Slim Laptop 14-inch" }
+              - column: { name: description, value: "Lightweight 14-inch laptop with 16GB RAM, 512GB SSD, and 12-hour battery life. Perfect for work and travel." }
+              - column: { name: price, valueNumeric: 699.00 }
+              - column: { name: stock, valueNumeric: 50 }
+              - column: { name: category_id, value: "b0000000-0000-0000-0000-000000000002" }
+              - column: { name: seller_id, value: "d0000000-0000-0000-0000-000000000001" }
+              - column: { name: images, value: '["https://placehold.co/600x400?text=Laptop+Open", "https://placehold.co/600x400?text=Laptop+Closed"]' }
+              - column: { name: created_at, valueDate: "2025-02-01T14:30:00" }
+              - column: { name: updated_at, valueDate: "2025-02-01T14:30:00" }
+
+        # Clothing product
+        - insert:
+            tableName: product
+            columns:
+              - column: { name: id, value: "c0000000-0000-0000-0000-000000000003" }
+              - column: { name: name, value: "Classic Cotton T-Shirt" }
+              - column: { name: description, value: "100% organic cotton t-shirt available in multiple colors. Comfortable fit for everyday wear." }
+              - column: { name: price, valueNumeric: 14.99 }
+              - column: { name: stock, valueNumeric: 500 }
+              - column: { name: category_id, value: "b0000000-0000-0000-0000-000000000004" }
+              - column: { name: seller_id, value: "d0000000-0000-0000-0000-000000000002" }
+              - column: { name: images, value: '["https://placehold.co/600x400?text=T-Shirt+Front", "https://placehold.co/600x400?text=T-Shirt+Back"]' }
+              - column: { name: created_at, valueDate: "2025-01-20T09:00:00" }
+              - column: { name: updated_at, valueDate: "2025-01-20T09:00:00" }
+
+        # Home & Garden product
+        - insert:
+            tableName: product
+            columns:
+              - column: { name: id, value: "c0000000-0000-0000-0000-000000000004" }
+              - column: { name: name, value: "Stainless Steel Kitchen Knife Set" }
+              - column: { name: description, value: "Professional 6-piece kitchen knife set with ergonomic handles and a wooden storage block." }
+              - column: { name: price, valueNumeric: 89.50 }
+              - column: { name: stock, valueNumeric: 120 }
+              - column: { name: category_id, value: "b0000000-0000-0000-0000-000000000008" }
+              - column: { name: seller_id, value: "d0000000-0000-0000-0000-000000000002" }
+              - column: { name: images, value: '["https://placehold.co/600x400?text=Knife+Set"]' }
+              - column: { name: created_at, valueDate: "2025-03-05T16:45:00" }
+              - column: { name: updated_at, valueDate: "2025-03-05T16:45:00" }
+
+        # Sports product
+        - insert:
+            tableName: product
+            columns:
+              - column: { name: id, value: "c0000000-0000-0000-0000-000000000005" }
+              - column: { name: name, value: "Yoga Mat Premium Non-Slip" }
+              - column: { name: description, value: "Extra thick 6mm yoga mat with non-slip surface. Includes carrying strap. Eco-friendly TPE material." }
+              - column: { name: price, valueNumeric: 29.99 }
+              - column: { name: stock, valueNumeric: 300 }
+              - column: { name: category_id, value: "a0000000-0000-0000-0000-000000000004" }
+              - column: { name: seller_id, value: "d0000000-0000-0000-0000-000000000001" }
+              - column: { name: images, value: '["https://placehold.co/600x400?text=Yoga+Mat+Rolled", "https://placehold.co/600x400?text=Yoga+Mat+Flat"]' }
+              - column: { name: created_at, valueDate: "2025-02-14T11:20:00" }
+              - column: { name: updated_at, valueDate: "2025-02-14T11:20:00" }
