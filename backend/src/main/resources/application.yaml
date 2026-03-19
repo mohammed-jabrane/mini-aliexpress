@@ -43,3 +43,5 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+    oauth:
+      use-pkce-with-authorization-code-flow: true

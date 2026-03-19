@@ -57,43 +57,54 @@
 - [x] Create changeset: `005-create-address-table`
 - [x] Create changeset: `006-seed-categories`
 - [x] Create changeset: `007-seed-sample-products`
+- [x] Create changeset: `008-seed-fake-data`
 
 ### Create API Process for Product (FA06)
-- [ ] Create package `domain.model`
-- [ ] Create entity `Product` (id, name, description, price, stock, category, sellerId, images, createdAt, updatedAt)
-- [ ] Create entity `Category` (id, name, parentId)
+- [x] Create package `domain.model`
+- [x] Create entity `Product` (id, name, description, price, stock, category, sellerId, images, createdAt, updatedAt)
+- [x] Create entity `Category` (id, name, parentId)
 
-- [ ] Create package `domain.port.in` (input ports / use cases)
-- [ ] Create `CreateProductUseCase`
-- [ ] Create `SearchProductsUseCase`
-- [ ] Create `GetProductByIdUseCase`
-- [ ] Create `UpdateProductUseCase`
-- [ ] Create `DeleteProductUseCase`
+- [x] Create package `domain.port.in` (input ports / use cases)
+- [x] Create `CreateProductUseCase`
+- [x] Create `SearchProductsUseCase`
+- [x] Create `GetProductByIdUseCase`
+- [x] Create `UpdateProductUseCase`
+- [x] Create `DeleteProductUseCase`
 
-- [ ] Create package `domain.port.out` (output ports)
-- [ ] Create `ProductRepositoryPort`
-- [ ] Create `CategoryRepositoryPort`
+- [x] Create package `domain.port.out` (output ports)
+- [x] Create `ProductRepositoryPort`
+- [x] Create `CategoryRepositoryPort`
 
-- [ ] Create package `domain.exception`
-- [ ] Create `ProductNotFoundException`
+- [x] Create package `domain.exception`
+- [x] Create `ProductNotFoundException`
 
-- [ ] Create package `application.service`
-- [ ] Implement `ProductService` (implements product use cases)
+- [x] Create package `application.service`
+- [x] Implement `ProductService` (implements product use cases)
 
-- [ ] Create package `application.dto`
-- [ ] Create `ProductRequestDTO` / `ProductResponseDTO`
-- [ ] Create `CategoryDTO`
+- [x] Create package `application.dto`
+- [x] Create `ProductRequestDTO` / `ProductResponseDTO`
+- [x] Create `CategoryDTO`
 
-- [ ] Create package `application.mapper`
-- [ ] Create `ProductMapper` (DTO <-> Domain)
+- [x] Create package `application.mapper`
+- [x] Create `ProductMapper` (MapStruct, DTO <-> Domain)
 
-- [ ] Create package `infrastructure.adapter.in.web`
-- [ ] Create `ProductController` (REST CRUD + search)
-- [ ] Create `CategoryController` (list, tree)
+- [x] Create package `infrastructure.adapter.in.web`
+- [x] Create `ProductController` (REST CRUD + search)
+- [x] Create `CategoryController` (list, tree)
 
-- [ ] Create package `infrastructure.adapter.out.persistence`
-- [ ] Create `ProductJpaEntity` + `ProductJpaRepository`
-- [ ] Create `CategoryJpaEntity` + `CategoryJpaRepository`
+- [x] Create package `infrastructure.adapter.out.persistence`
+- [x] Create `ProductJpaEntity` + `ProductJpaRepository`
+- [x] Create `CategoryJpaEntity` + `CategoryJpaRepository`
+- [x] Create `ProductPersistenceMapper` + `CategoryPersistenceMapper` (MapStruct)
+- [x] Create `ProductPersistenceAdapter` + `CategoryPersistenceAdapter`
+- [x] Add MapStruct + lombok-mapstruct-binding dependencies to `pom.xml`
+
+### Configuration OAuth2 and Keycloak Configuration with OpenAPI Swagger (FA07)
+
+- [x] Create `OpenApiConfig` with OAuth2 Authorization Code + PKCE security scheme
+- [x] Configure Swagger UI OAuth2 client (`client-id`, PKCE) in `application.yaml` / `application-local.yaml`
+- [x] Add Swagger redirect URI to Keycloak realm export (`mini-aliexpress-frontend` client)
+- [x] SecurityConfig permits Swagger UI and OpenAPI endpoints
 
 ### Domain Layer
 
@@ -179,7 +190,7 @@
 - [ ] Create `infrastructure.config.security.JwtAuthConverter`
 - [ ] Create `infrastructure.config.storage.MinioConfig`
 - [ ] Create `infrastructure.config.storage.AzureBlobConfig`
-- [ ] Create `infrastructure.config.OpenApiConfig` (Swagger customization)
+- [x] Create `infrastructure.config.OpenApiConfig` (Swagger customization)
 - [ ] Create CORS configuration
 
 ---
@@ -296,10 +307,10 @@
 - [x] Create `.env` file
 - [x] Create `config/postgres/init.sql`
 - [x] Create `config/keycloak/realm-export.json`
-- [ ] Test `docker compose up -d` — all services healthy
-- [ ] Verify Keycloak realm auto-import
-- [ ] Verify Minio buckets auto-created
-- [ ] Verify Kafka UI accessible
+- [x] Test `docker compose up -d` — all services healthy
+- [x] Verify Keycloak realm auto-import
+- [x] Verify Minio buckets auto-created
+- [x] Verify Kafka UI accessible
 
 ### Profile 2 — Local Kubernetes (Minikube)
 
