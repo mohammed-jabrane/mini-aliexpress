@@ -1,0 +1,26 @@
+<mat-card class="product-card" (click)="goToDetail()">
+  <img
+    mat-card-image
+    [src]="product.images.length ? product.images[0] : 'https://placehold.co/300x200?text=No+Image'"
+    [alt]="product.name"
+    class="product-image"
+  />
+  <mat-card-content>
+    <h3 class="product-name">{{ product.name }}</h3>
+    <p class="product-price">{{ product.price | currency }}</p>
+    <span class="stock-badge" [class.out-of-stock]="product.stock === 0">
+      {{ product.stock > 0 ? product.stock + ' in stock' : 'Out of stock' }}
+    </span>
+  </mat-card-content>
+  <mat-card-actions>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="product.stock === 0"
+      (click)="onAddToCart($event)"
+    >
+      <mat-icon>add_shopping_cart</mat-icon>
+      Add to Cart
+    </button>
+  </mat-card-actions>
+</mat-card>

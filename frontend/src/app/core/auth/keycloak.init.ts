@@ -17,5 +17,9 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<boo
       },
       enableBearerInterceptor: true,
       bearerPrefix: 'Bearer',
+      bearerExcludedUrls: [
+        '/api/products',
+        '/api/categories',
+      ],
     });
 }

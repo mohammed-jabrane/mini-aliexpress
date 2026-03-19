@@ -186,7 +186,7 @@
 
 - [ ] Create `infrastructure.config.kafka.KafkaConfig`
 - [ ] Create `infrastructure.config.kafka.KafkaTopicConfig`
-- [ ] Create `infrastructure.config.security.SecurityConfig` (Spring Security + Keycloak JWT)
+- [x] Create `infrastructure.config.security.SecurityConfig` (Spring Security + Keycloak JWT)
 - [ ] Create `infrastructure.config.security.JwtAuthConverter`
 - [ ] Create `infrastructure.config.storage.MinioConfig`
 - [ ] Create `infrastructure.config.storage.AzureBlobConfig`
@@ -197,7 +197,7 @@
 
 ## 3. Frontend — Angular 18
 
-### Core Module
+### Core Module (FA10)
 
 - [ ] Create `core/auth/keycloak.service.ts`
 - [ ] Create `core/auth/auth.guard.ts`
@@ -206,11 +206,11 @@
 - [ ] Create `core/interceptors/error.interceptor.ts` (global error handling)
 - [ ] Create `core/services/notification.service.ts` (toast messages)
 
-### Shared Module
+### Shared Module (FA09)
 
-- [ ] Create `shared/components/header/` (navbar, search bar, cart icon, user menu)
-- [ ] Create `shared/components/footer/`
-- [ ] Create `shared/components/product-card/` (reusable card component)
+- [x] Create `shared/components/header/` (navbar, search bar, cart icon, user menu)
+- [x] Create `shared/components/footer/`
+- [x] Create `shared/components/product-card/` (reusable card component)
 - [ ] Create `shared/components/pagination/`
 - [ ] Create `shared/components/loading-spinner/`
 - [ ] Create `shared/components/confirm-dialog/`
@@ -219,16 +219,16 @@
 - [ ] Create `shared/mappers/product.mapper.ts`
 - [ ] Create `shared/mappers/cart.mapper.ts`
 - [ ] Create `shared/mappers/order.mapper.ts`
-- [ ] Create `shared/models/` (frontend domain models)
+- [x] Create `shared/models/` (frontend domain models)
 
-### Feature — Product
+### Feature — Product (FA08)
 
-- [ ] Create `features/product/product.routes.ts` (lazy-loaded)
-- [ ] Create `features/product/pages/product-list/` (grid, filters, sorting, pagination)
-- [ ] Create `features/product/pages/product-detail/` (images gallery, add to cart, seller info)
-- [ ] Create `features/product/pages/product-search/` (search results)
-- [ ] Create `features/product/services/product.service.ts`
-- [ ] Implement product Signals for local component state
+- [x] Create `features/product/product.routes.ts` (lazy-loaded)
+- [x] Create `features/product/pages/product-list/` (grid, filters, sorting, pagination)
+- [x] Create `features/product/pages/product-detail/` (images gallery, add to cart, seller info)
+- [x] Create `features/product/pages/product-search/` (search results via header search bar + query params)
+- [x] Create `features/product/services/product.service.ts`
+- [x] Implement product Signals for local component state
 
 ### Feature — Cart
 
@@ -289,13 +289,13 @@
 
 ### Routing (app.routes.ts)
 
-- [ ] Configure lazy-loaded route for `/products`
+- [x] Configure lazy-loaded route for `/products`
 - [ ] Configure lazy-loaded route for `/cart`
 - [ ] Configure lazy-loaded route for `/orders`
 - [ ] Configure lazy-loaded route for `/user`
 - [ ] Configure lazy-loaded route for `/seller` (with `RoleGuard ROLE_SELLER`)
 - [ ] Configure lazy-loaded route for `/admin` (with `RoleGuard ROLE_ADMIN`)
-- [ ] Configure wildcard redirect to `/products`
+- [x] Configure wildcard redirect to `/products`
 
 ---
 

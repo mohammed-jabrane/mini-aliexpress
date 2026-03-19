@@ -15,7 +15,7 @@ databaseChangeLog:
               - column: { name: stock, valueNumeric: 250 }
               - column: { name: category_id, value: "b0000000-0000-0000-0000-000000000003" }
               - column: { name: seller_id, value: "d0000000-0000-0000-0000-000000000001" }
-              - column: { name: images, value: '["https://placehold.co/600x400?text=Earbuds+Front", "https://placehold.co/600x400?text=Earbuds+Case"]' }
+              - column: { name: images, value: '["http://localhost:9002/product-images/earbuds-1.png", "http://localhost:9002/product-images/earbuds-2.png"]' }
               - column: { name: created_at, valueDate: "2025-01-15T10:00:00" }
               - column: { name: updated_at, valueDate: "2025-01-15T10:00:00" }
 
@@ -30,7 +30,7 @@ databaseChangeLog:
               - column: { name: stock, valueNumeric: 50 }
               - column: { name: category_id, value: "b0000000-0000-0000-0000-000000000002" }
               - column: { name: seller_id, value: "d0000000-0000-0000-0000-000000000001" }
-              - column: { name: images, value: '["https://placehold.co/600x400?text=Laptop+Open", "https://placehold.co/600x400?text=Laptop+Closed"]' }
+              - column: { name: images, value: '["http://localhost:9002/product-images/laptop-1.png", "http://localhost:9002/product-images/laptop-2.png"]' }
               - column: { name: created_at, valueDate: "2025-02-01T14:30:00" }
               - column: { name: updated_at, valueDate: "2025-02-01T14:30:00" }
 
@@ -45,7 +45,7 @@ databaseChangeLog:
               - column: { name: stock, valueNumeric: 500 }
               - column: { name: category_id, value: "b0000000-0000-0000-0000-000000000004" }
               - column: { name: seller_id, value: "d0000000-0000-0000-0000-000000000002" }
-              - column: { name: images, value: '["https://placehold.co/600x400?text=T-Shirt+Front", "https://placehold.co/600x400?text=T-Shirt+Back"]' }
+              - column: { name: images, value: '["http://localhost:9002/product-images/tshirt-1.png", "http://localhost:9002/product-images/tshirt-2.png"]' }
               - column: { name: created_at, valueDate: "2025-01-20T09:00:00" }
               - column: { name: updated_at, valueDate: "2025-01-20T09:00:00" }
 
@@ -60,7 +60,7 @@ databaseChangeLog:
               - column: { name: stock, valueNumeric: 120 }
               - column: { name: category_id, value: "b0000000-0000-0000-0000-000000000008" }
               - column: { name: seller_id, value: "d0000000-0000-0000-0000-000000000002" }
-              - column: { name: images, value: '["https://placehold.co/600x400?text=Knife+Set"]' }
+              - column: { name: images, value: '["http://localhost:9002/product-images/knife-set-1.png"]' }
               - column: { name: created_at, valueDate: "2025-03-05T16:45:00" }
               - column: { name: updated_at, valueDate: "2025-03-05T16:45:00" }
 
@@ -75,6 +75,6 @@ databaseChangeLog:
               - column: { name: stock, valueNumeric: 300 }
               - column: { name: category_id, value: "a0000000-0000-0000-0000-000000000004" }
               - column: { name: seller_id, value: "d0000000-0000-0000-0000-000000000001" }
-              - column: { name: images, value: '["https://placehold.co/600x400?text=Yoga+Mat+Rolled", "https://placehold.co/600x400?text=Yoga+Mat+Flat"]' }
+              - column: { name: images, value: '["http://localhost:9002/product-images/yoga-mat-1.png", "http://localhost:9002/product-images/yoga-mat-2.png"]' }
               - column: { name: created_at, valueDate: "2025-02-14T11:20:00" }
               - column: { name: updated_at, valueDate: "2025-02-14T11:20:00" }

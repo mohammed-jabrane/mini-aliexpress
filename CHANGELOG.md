@@ -42,3 +42,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Azure PaaS (no Kubernetes) Terraform deployment profile
 - Terraform modules: AKS, PostgreSQL, Blob Storage, Event Hubs, Keycloak VM, Networking, Container Registry
+
+
+## [2.2.0]
+
+### Added
+- Multilanguage plateforme
+
+## [3.0.0]
+
+### Added
+- Paiement with card
+
+## [4.0.0]
+
+### Added
+- Migration to AWS 
