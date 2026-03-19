@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-address-table
+      author: mini-aliexpress
+      changes:
+        - createTable:
+            tableName: address
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: street
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: zip_code
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: country
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            tableName: address
+            indexName: idx_address_user_id
+            columns:
+              - column:
+                  name: user_id
+
+        - addForeignKeyConstraint:
+            baseTableName: customer_order
+            baseColumnNames: shipping_address_id
+            referencedTableName: address
+            referencedColumnNames: id
+            constraintName: fk_customer_order_address

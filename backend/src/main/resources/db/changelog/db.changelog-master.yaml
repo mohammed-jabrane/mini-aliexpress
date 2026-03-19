@@ -1,1 +1,25 @@
-databaseChangeLog: []
+databaseChangeLog:
+  - include:
+      file: changesets/001-create-category-table.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changesets/002-create-product-table.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changesets/003-create-cart-tables.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changesets/004-create-order-tables.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changesets/005-create-address-table.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changesets/006-seed-categories.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changesets/007-seed-sample-products.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changesets/008-seed-fake-data.yaml
+      relativeToChangelogFile: true

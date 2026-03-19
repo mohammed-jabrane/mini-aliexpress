@@ -1,0 +1,158 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-seed-fake-data
+      author: mini-aliexpress
+      context: seed
+      changes:
+        # ── Addresses ──
+        - insert:
+            tableName: address
+            columns:
+              - column: { name: id, value: "e0000000-0000-0000-0000-000000000001" }
+              - column: { name: user_id, value: "f0000000-0000-0000-0000-000000000001" }
+              - column: { name: street, value: "123 Main Street" }
+              - column: { name: city, value: "Paris" }
+              - column: { name: zip_code, value: "75001" }
+              - column: { name: country, value: "France" }
+        - insert:
+            tableName: address
+            columns:
+              - column: { name: id, value: "e0000000-0000-0000-0000-000000000002" }
+              - column: { name: user_id, value: "f0000000-0000-0000-0000-000000000002" }
+              - column: { name: street, value: "456 Oak Avenue" }
+              - column: { name: city, value: "Lyon" }
+              - column: { name: zip_code, value: "69001" }
+              - column: { name: country, value: "France" }
+        - insert:
+            tableName: address
+            columns:
+              - column: { name: id, value: "e0000000-0000-0000-0000-000000000003" }
+              - column: { name: user_id, value: "f0000000-0000-0000-0000-000000000003" }
+              - column: { name: street, value: "789 Elm Boulevard" }
+              - column: { name: city, value: "Berlin" }
+              - column: { name: zip_code, value: "10115" }
+              - column: { name: country, value: "Germany" }
+
+        # ── Carts ──
+        - insert:
+            tableName: cart
+            columns:
+              - column: { name: id, value: "ca000000-0000-0000-0000-000000000001" }
+              - column: { name: user_id, value: "f0000000-0000-0000-0000-000000000001" }
+              - column: { name: created_at, valueDate: "2025-03-10T08:00:00" }
+        - insert:
+            tableName: cart
+            columns:
+              - column: { name: id, value: "ca000000-0000-0000-0000-000000000002" }
+              - column: { name: user_id, value: "f0000000-0000-0000-0000-000000000002" }
+              - column: { name: created_at, valueDate: "2025-03-11T09:30:00" }
+
+        # ── Cart Items ──
+        # User 1 cart: earbuds x2 + yoga mat x1
+        - insert:
+            tableName: cart_item
+            columns:
+              - column: { name: id, value: "ci000000-0000-0000-0000-000000000001" }
+              - column: { name: cart_id, value: "ca000000-0000-0000-0000-000000000001" }
+              - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000001" }
+              - column: { name: quantity, valueNumeric: 2 }
+              - column: { name: unit_price, valueNumeric: 49.99 }
+        - insert:
+            tableName: cart_item
+            columns:
+              - column: { name: id, value: "ci000000-0000-0000-0000-000000000002" }
+              - column: { name: cart_id, value: "ca000000-0000-0000-0000-000000000001" }
+              - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000005" }
+              - column: { name: quantity, valueNumeric: 1 }
+              - column: { name: unit_price, valueNumeric: 29.99 }
+        # User 2 cart: laptop x1
+        - insert:
+            tableName: cart_item
+            columns:
+              - column: { name: id, value: "ci000000-0000-0000-0000-000000000003" }
+              - column: { name: cart_id, value: "ca000000-0000-0000-0000-000000000002" }
+              - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000002" }
+              - column: { name: quantity, valueNumeric: 1 }
+              - column: { name: unit_price, valueNumeric: 699.00 }
+
+        # ── Orders ──
+        # Order 1: DELIVERED order from user 1
+        - insert:
+            tableName: customer_order
+            columns:
+              - column: { name: id, value: "0d000000-0000-0000-0000-000000000001" }
+              - column: { name: user_id, value: "f0000000-0000-0000-0000-000000000001" }
+              - column: { name: status, value: "DELIVERED" }
+              - column: { name: total_amount, valueNumeric: 129.97 }
+              - column: { name: shipping_address_id, value: "e0000000-0000-0000-0000-000000000001" }
+              - column: { name: created_at, valueDate: "2025-02-20T14:00:00" }
+        # Order 2: SHIPPED order from user 2
+        - insert:
+            tableName: customer_order
+            columns:
+              - column: { name: id, value: "0d000000-0000-0000-0000-000000000002" }
+              - column: { name: user_id, value: "f0000000-0000-0000-0000-000000000002" }
+              - column: { name: status, value: "SHIPPED" }
+              - column: { name: total_amount, valueNumeric: 699.00 }
+              - column: { name: shipping_address_id, value: "e0000000-0000-0000-0000-000000000002" }
+              - column: { name: created_at, valueDate: "2025-03-01T10:15:00" }
+        # Order 3: PENDING order from user 3
+        - insert:
+            tableName: customer_order
+            columns:
+              - column: { name: id, value: "0d000000-0000-0000-0000-000000000003" }
+              - column: { name: user_id, value: "f0000000-0000-0000-0000-000000000003" }
+              - column: { name: status, value: "PENDING" }
+              - column: { name: total_amount, valueNumeric: 104.49 }
+              - column: { name: shipping_address_id, value: "e0000000-0000-0000-0000-000000000003" }
+              - column: { name: created_at, valueDate: "2025-03-15T18:45:00" }
+
+        # ── Order Items ──
+        # Order 1 items: earbuds x2 + yoga mat x1
+        - insert:
+            tableName: order_item
+            columns:
+              - column: { name: id, value: "0i000000-0000-0000-0000-000000000001" }
+              - column: { name: order_id, value: "0d000000-0000-0000-0000-000000000001" }
+              - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000001" }
+              - column: { name: product_name, value: "Wireless Bluetooth Earbuds Pro" }
+              - column: { name: quantity, valueNumeric: 2 }
+              - column: { name: unit_price, valueNumeric: 49.99 }
+        - insert:
+            tableName: order_item
+            columns:
+              - column: { name: id, value: "0i000000-0000-0000-0000-000000000002" }
+              - column: { name: order_id, value: "0d000000-0000-0000-0000-000000000001" }
+              - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000005" }
+              - column: { name: product_name, value: "Yoga Mat Premium Non-Slip" }
+              - column: { name: quantity, valueNumeric: 1 }
+              - column: { name: unit_price, valueNumeric: 29.99 }
+        # Order 2 items: laptop x1
+        - insert:
+            tableName: order_item
+            columns:
+              - column: { name: id, value: "0i000000-0000-0000-0000-000000000003" }
+              - column: { name: order_id, value: "0d000000-0000-0000-0000-000000000002" }
+              - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000002" }
+              - column: { name: product_name, value: "Ultra Slim Laptop 14-inch" }
+              - column: { name: quantity, valueNumeric: 1 }
+              - column: { name: unit_price, valueNumeric: 699.00 }
+        # Order 3 items: t-shirt x3 + knife set x1
+        - insert:
+            tableName: order_item
+            columns:
+              - column: { name: id, value: "0i000000-0000-0000-0000-000000000004" }
+              - column: { name: order_id, value: "0d000000-0000-0000-0000-000000000003" }
+              - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000003" }
+              - column: { name: product_name, value: "Classic Cotton T-Shirt" }
+              - column: { name: quantity, valueNumeric: 1 }
+              - column: { name: unit_price, valueNumeric: 14.99 }
+        - insert:
+            tableName: order_item
+            columns:
+              - column: { name: id, value: "0i000000-0000-0000-0000-000000000005" }
+              - column: { name: order_id, value: "0d000000-0000-0000-0000-000000000003" }
+              - column: { name: product_id, value: "c0000000-0000-0000-0000-000000000004" }
+              - column: { name: product_name, value: "Stainless Steel Kitchen Knife Set" }
+              - column: { name: quantity, valueNumeric: 1 }
+              - column: { name: unit_price, valueNumeric: 89.50 }

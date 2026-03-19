@@ -1,0 +1,95 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-order-tables
+      author: mini-aliexpress
+      changes:
+        - createTable:
+            tableName: customer_order
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_amount
+                  type: decimal(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: shipping_address_id
+                  type: uuid
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: order_item
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: uuid
+              - column:
+                  name: product_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit_price
+                  type: decimal(12,2)
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: order_item
+            baseColumnNames: order_id
+            referencedTableName: customer_order
+            referencedColumnNames: id
+            constraintName: fk_order_item_order
+            onDelete: CASCADE
+
+        - createIndex:
+            tableName: customer_order
+            indexName: idx_customer_order_user_id
+            columns:
+              - column:
+                  name: user_id
+
+        - createIndex:
+            tableName: customer_order
+            indexName: idx_customer_order_status
+            columns:
+              - column:
+                  name: status
